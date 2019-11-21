@@ -54,7 +54,7 @@ class Game
      */
     public function start(): void
     {
-        //$this->dealCards();
+        $this->dealCards();
         $this->isPlaying = true;
         $this->updatePlayerTurn();
     }
@@ -70,7 +70,7 @@ class Game
         while ($numberOfCards > 0)
         {
             // Remove a card from the top of the game deck
-            $gameDeckCard = $this->gameDeck->removeCardsFromTop();
+            $gameDeckCard = $this->gameDeck->removeCardsFromTop(1);
             // Get the player deck
             $playerDeck = $this->players[$player]->getPlayerDeck();
             var_dump($playerDeck);

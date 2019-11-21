@@ -23,23 +23,15 @@ class Deck
 
     /**
      * Deck constructor.
-     * @param array $cards
+     *
      */
-    public function __construct(array $cards = null)
+    public function __construct()
     {
-        if ($cards = null)
-        {
-            $this->cards = array();
-        }
-        else
-        {
-            $this->cards = $cards;
-        }
+        $this->cards = array();
     }
 
     /**
      * A function to generate a new deck at the beginning of a game.
-     * @return Deck
      */
     public function generateGameDeck()
     {
