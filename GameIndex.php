@@ -1,5 +1,5 @@
 <?php
-require_once 'Game.php';
+require_once 'game.php';
 
 echo "<h1>Egyptian Rat Screw</h1>";
 

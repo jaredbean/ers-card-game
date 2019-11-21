@@ -185,7 +185,8 @@ class Deck
      */
     public function getSize(): int
     {
-        return $this->size;
+        return sizeof($this->cards);
+//        return $this->size;
     }
 
     /**
