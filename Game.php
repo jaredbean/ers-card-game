@@ -36,7 +36,7 @@ class Game
         $this->discardDeck = new Deck();
         $this->gameDeck = new Deck();
         $this->gameDeck->generateGameDeck();
-        print_r($this->gameDeck);
+        //print_r($this->gameDeck);
     }
 
     /**
@@ -55,6 +55,10 @@ class Game
     public function start(): void
     {
         $this->dealCards();
+        echo "<h2>Player 1 Deck:</h2>";
+        var_dump($this->players[0]->getPlayerDeck());
+        echo "<h2>Player 2 Deck:</h2>";
+        var_dump($this->players[1]->getPlayerDeck());
         $this->isPlaying = true;
         $this->updatePlayerTurn();
     }
@@ -65,7 +69,6 @@ class Game
     public function dealCards(): void
     {
         $numberOfCards = $this->gameDeck->getSize();
-        var_dump($numberOfCards);
         $player = 0;
         while ($numberOfCards > 0)
         {
@@ -73,7 +76,6 @@ class Game
             $gameDeckCard = $this->gameDeck->removeCardsFromTop(1);
             // Get the player deck
             $playerDeck = $this->players[$player]->getPlayerDeck();
-            var_dump($playerDeck);
             // Add the game deck card to the player deck
             $playerDeck->addCardsToTop($gameDeckCard);
             // Update the player deck

@@ -8,4 +8,5 @@ $game->addPlayer("Joe Dirt", "123.123.123");
 $game->addPlayer("Leroy Jenkins", "456.456.456");
 // TODO: Debug starting the game. Dealing the cards.
 $game->start();
+echo '<h2>Game object dump</h2>';
 var_dump($game);

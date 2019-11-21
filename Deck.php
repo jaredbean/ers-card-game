@@ -9,7 +9,7 @@ class Deck
     /**
      * An array of Card objects that are contained in the deck.
      */
-    private $cards = null;
+    private $cards = array();
 
     /**
      * An int representing the number of cards in the deck.
@@ -35,20 +35,16 @@ class Deck
      */
     public function generateGameDeck()
     {
-        $gameDeck = new Deck();
-
         $clubs = $this->generateSuit('C');
-        $gameDeck->addCardsToTop($clubs);
+        $this->addCardsToTop($clubs);
         $diamonds = $this->generateSuit('D');
-        $gameDeck->addCardsToTop($diamonds);
+        $this->addCardsToTop($diamonds);
         $hearts = $this->generateSuit('H');
-        $gameDeck->addCardsToTop($hearts);
+        $this->addCardsToTop($hearts);
         $spades = $this->generateSuit('S');
-        $gameDeck->addCardsToTop($spades);
+        $this->addCardsToTop($spades);
 
-        $gameDeck->shuffleDeck();
-
-        $this->cards = $gameDeck;
+        $this->shuffleDeck();
     }
 
     public function generateSuit(string $suit): array
@@ -131,7 +127,7 @@ class Deck
             $counter = $numCards;
             while ($counter > 0)
             {
-                $cardArray[] = array_pop($this->card);
+                $cardArray[] = array_pop($this->cards);
                 $counter--;
             }
             $this->size -= $numCards;
@@ -178,7 +174,6 @@ class Deck
     public function getSize(): int
     {
         return sizeof($this->cards);
-//        return $this->size;
     }
 
     /**
