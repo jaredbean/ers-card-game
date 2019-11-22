@@ -1,0 +1,6 @@
+[21-Nov-2019 14:16:31 UTC] PHP Warning:  mysqli::__construct(): (HY000/2002): A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+ in C:\wamp64\www\Cs3750\EgyptianRatScrew\Db_connection.php on line 9
+[21-Nov-2019 14:16:31 UTC] PHP Stack trace:
+[21-Nov-2019 14:16:31 UTC] PHP   1. {main}() C:\wamp64\www\Cs3750\EgyptianRatScrew\AjaxRequestHandlers.php:0
+[21-Nov-2019 14:16:31 UTC] PHP   2. require_once() C:\wamp64\www\Cs3750\EgyptianRatScrew\AjaxRequestHandlers.php:9
+[21-Nov-2019 14:16:31 UTC] PHP   3. mysqli->__construct() C:\wamp64\www\Cs3750\EgyptianRatScrew\Db_connection.php:9

@@ -8,25 +8,29 @@ require_once 'Deck.php';
 class Game
 {
     /**
+     * The game ID used for other players to connect to the game.
+     */
+    public $gameId = null;
+    /**
      * An array of Player objects that represent each player of the game.
      */
-    private $players = null;
+    public $players = null;
     /**
      * A deck object that represents the the 52 card deck before the cards are dealt to players.
      */
-    private $gameDeck = null;
+    public $gameDeck = null;
     /**
      * A deck object that represents the main deck of the game where players place their cards and can slap.
      */
-    private $discardDeck = null;
+    public $discardDeck = null;
     /**
      * A bool that determines if the game is in the plays state.
      */
-    private $isPlaying = false;
+    public $isPlaying = false;
     /**
      * An index to the $players array indicating the turn of the current player.
      */
-    private $indexOfPlayersTurn = -1;
+    public $indexOfPlayersTurn = -1;
 
     /**
      * Game constructor.
@@ -36,17 +40,18 @@ class Game
         $this->discardDeck = new Deck();
         $this->gameDeck = new Deck();
         $this->gameDeck->generateGameDeck();
+        $this->players = [];
         //print_r($this->gameDeck);
     }
 
     /**
      * A function to create a new player.
      * @param string $name: The name of the player.
-     * @param string $playerIP: IP of the player.
+     * @param string $playerId: Id of the player.
      */
-    public function addPlayer(string $name, string $playerIP): void
+    public function addPlayer(string $name, int $playerId): void
     {
-        $this->players[] = new Player($name, $playerIP);
+        $this->players[] = new Player($name, $playerId);
     }
 
     /**
@@ -55,9 +60,9 @@ class Game
     public function start(): void
     {
         $this->dealCards();
-        echo "<h2>Player 1 Deck:</h2>";
+        // echo "<h2>Player 1 Deck:</h2>";
         var_dump($this->players[0]->getPlayerDeck());
-        echo "<h2>Player 2 Deck:</h2>";
+        // echo "<h2>Player 2 Deck:</h2>";
         var_dump($this->players[1]->getPlayerDeck());
         $this->isPlaying = true;
         $this->updatePlayerTurn();

@@ -1,9 +1,9 @@
 <?php
 // Database credentials
-    $hostname = "localhost";
-    $username = "root";
-    $password = "";
-    $db_name = "Cs3750";
+$hostname = "sql201.epizy.com";
+$username = "epiz_24388369";
+$password = "weberstudent1";
+$db_name = "epiz_24388369_cs3750_names";
 
 // Create connection
 $conn = new mysqli($hostname, $username, $password, $db_name);// mysqli_connect($hostname, $username, $password, $db_name);

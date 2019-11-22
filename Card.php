@@ -8,12 +8,12 @@ class Card
     /**
      * A string that represents the suit of a card ('C', 'D', 'H', 'S'; Club, Diamond, Heart, Spade).
      */
-    private $suit = "";
+    public $suit = "";
 
     /**
      * A string that represents the value of a card ('1', '2', ..., '10', 'J', 'Q', 'K', 'A'; Jack, Queen, King, Ace).
      */
-    private $value = "";
+    public $value = "";
 
     /**
      * Card constructor.

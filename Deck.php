@@ -9,17 +9,17 @@ class Deck
     /**
      * An array of Card objects that are contained in the deck.
      */
-    private $cards = array();
+    public $cards = array();
 
     /**
      * An int representing the number of cards in the deck.
      */
-    private $size = 0;
+    public $size = 0;
 
     /**
      * A bool that represents if the deck is able to be clicked.
      */
-    private $isClickable = false;
+    public $isClickable = false;
 
     /**
      * Deck constructor.

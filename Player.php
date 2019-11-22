@@ -9,27 +9,27 @@ class Player
     /**
      * A string that represents the players username.
      */
-    private $username = "";
+    public $username = "";
 
     /**
-     * A string that represents the players IP address.
+     * A number to identify the player.
      */
-    private $playerIP = "";
+    public $playerId = null;
 
     /**
      * A Deck object that represents the players deck.
      */
-    private $playerDeck = null;
+    public $playerDeck = null;
 
     /**
      * Player constructor.
      * @param string $username
      * @param string $playerIp
      */
-    public function __construct(string $username, string $playerIp)
+    public function __construct(string $username, int $playerId)
     {
         $this->username = $username;
-        $this->playerIP = $playerIp;
+        $this->playerId = $playerId;
         $this->playerDeck = new Deck();
     }
 
@@ -50,19 +50,19 @@ class Player
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getPlayerIP(): string
+    public function getPlayerId(): int
     {
-        return $this->playerIP;
+        return $this->playerId;
     }
 
     /**
-     * @param string $playerIP
+     * @param int $playerId
      */
-    public function setPlayerIP(string $playerIP): void
+    public function setPlayerIP(int $playerId): void
     {
-        $this->playerIP = $playerIP;
+        $this->playerId = $playerId;
     }
 
     /**

@@ -7,11 +7,16 @@
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
             crossorigin="anonymous"></script>
         <script src="index.js"></script>
+        <style>
+        #game-section, #error-section, #wait-section {
+            display: none;
+        }
+        </style>
     </head>
     <body>
         <h1>Egyptian Rat Screw</h1>
 
-        <section id="startPrompt">
+        <section id="start-section">
             <form>
                 <div>
                     <label>Name</label>
@@ -26,15 +31,12 @@
                 </div>
             </form>
         </section>
-        <section id="show-msg-group">
-            <div id="messages"></div>
+        <section id="error-section"></section>
+        <section id="wait-section">
+            Waiting for other players...
         </section>
-        <section id="send-msg-group">
-            <label>Message</label>
-            <input type="text" id="msg-in" />
-            <div>
-                <button id="send-msg-btn">Send</button>
-            </div>
+        <section id="game-section">
+            Game goes here.
         </section>
     </body>
 </html>
