@@ -5,44 +5,6 @@
         var gameId = false;
         var gameIntervalId = 0;
 
-        // First turn on AJAX message checking.
-        // var inervalId = setInterval(function (){
-        //     $.get(fncUrl,
-        //         {
-        //             action: 'checkMsgs'
-        //         },
-        //         function (response){
-        //             var messages = JSON.parse(response);
-
-        //             var msgHtml = '';
-
-        //             messages.forEach(function (m){
-        //                 msgHtml += '<div>' + m + '</div>';
-        //             });
-
-        //             $('#messages').html(msgHtml);
-        //         });
-        // },
-        // 500);
-
-
-        
-        // $('#send-msg-btn').click(function (evt){
-        //     var msg = $('#msg-in').val();
-        //     sendMsg(msg);
-        // });
-
-        // function sendMsg(msg){
-        //     $.post(fncUrl,
-        //         {
-        //             action: 'sendMsg',
-        //             msg: msg
-        //         },
-        //         function (response){
-        //             console.log(response, 'Message sent');
-        //         });
-        // }
-
         $('#start-btn').click(onStartBtnClick);
 
         function onStartBtnClick(evt){
@@ -84,8 +46,8 @@
                     },
                     function (response){
                         if (isJsonString(response)){
-                            game = response;
-                            console.log(response);
+                            game = JSON.parse(response);
+
                             startGame();
                         }
                         else {
@@ -137,6 +99,8 @@
 
             // Hide the start game group.
             $('#start-section').css('display', 'none');
+
+            $('.game-id').html(game.gameId);
 
             // Show the game.
             checkPlayerCount();

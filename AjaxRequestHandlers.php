@@ -3,20 +3,12 @@
     ini_set('html_errors', 1);
     error_reporting(E_ALL);
 
-    // class chat { public $messages; }
-    // class game { public $name; public $gameId; }
-
     require_once 'Db_connection.php';
     require_once 'GameLogic.php';
 
     if (isset($_GET['action'])){
         $action = $_GET['action'];
         switch ($action){
-            case 'checkMsgs':
-                $messages = checkMsgs($conn);
-
-                echo json_encode($messages);
-                break;
             case 'getGame':
                 if(isset($_GET['gameId'])){
                     $game = getGame($conn, $_GET['gameId']);
@@ -38,11 +30,6 @@
     if (isset($_POST['action'])){
         $action = $_POST['action'];
         switch ($action){
-            // case 'sendMsg':
-            //     if (isset($_POST['msg'])){
-            //         echo $_POST['msg'];
-            //         sendMsg($conn, $_POST['msg']);
-            //     }
             case 'newGame':
                 if (isset($_POST['name'])){
                     $newGame = createGame($conn, $_POST['name']);

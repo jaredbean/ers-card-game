@@ -49,10 +49,16 @@ function createGame($conn, $name)
 function findGame($conn, $gameId, $name){
     $gameObject = getGame($conn, $gameId);
 
-    $playerCount = count($gameObject->players);
-    $gameObject->addPlayer($name, $playerCount - 1);
+    $parsedGame = cast('Game', $gameObject);
 
-    saveGameState($conn, $gameObject, $gameId);
+    $playerCount = count($parsedGame->players);
+    $parsedGame->addPlayer($name, $playerCount - 1);
+
+    if ($playerCount > 1){
+        $parsedGame->start();
+    }
+
+    saveGameState($conn, $parsedGame, $gameId);
 
     return $gameObject;
 
@@ -66,4 +72,34 @@ function saveGameState($conn, $gameState, $gameId)
     $query = "Update EgyptianRatScrew Set GameObject = '" . json_encode($gameState) . "' Where GameID = " . $gameId . ";";
     
     return $conn->query($query) or die($conn->error);
+}
+
+/**
+ * Uses reflection to cast to an object. See https://stackoverflow.com/a/9812059
+ *
+ * @param string|object $destination
+ * @param object $sourceObject
+ * @return object
+ */
+function cast($destination, $sourceObject)
+{
+    if (is_string($destination)) {
+        $destination = new $destination();
+    }
+    $sourceReflection = new ReflectionObject($sourceObject);
+    $destinationReflection = new ReflectionObject($destination);
+    $sourceProperties = $sourceReflection->getProperties();
+    foreach ($sourceProperties as $sourceProperty) {
+        $sourceProperty->setAccessible(true);
+        $name = $sourceProperty->getName();
+        $value = $sourceProperty->getValue($sourceObject);
+        if ($destinationReflection->hasProperty($name)) {
+            $propDest = $destinationReflection->getProperty($name);
+            $propDest->setAccessible(true);
+            $propDest->setValue($destination,$value);
+        } else {
+            $destination->$name = $value;
+        }
+    }
+    return $destination;
 }

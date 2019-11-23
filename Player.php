@@ -60,7 +60,7 @@ class Player
     /**
      * @param int $playerId
      */
-    public function setPlayerIP(int $playerId): void
+    public function setPlayerId(int $playerId): void
     {
         $this->playerId = $playerId;
     }

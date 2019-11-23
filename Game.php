@@ -16,7 +16,7 @@ class Game
      */
     public $players = null;
     /**
-     * A deck object that represents the the 52 card deck before the cards are dealt to players.
+     * A deck object that represents the 52 card deck before the cards are dealt to players.
      */
     public $gameDeck = null;
     /**
@@ -61,9 +61,9 @@ class Game
     {
         $this->dealCards();
         // echo "<h2>Player 1 Deck:</h2>";
-        var_dump($this->players[0]->getPlayerDeck());
+        // var_dump($this->players[0]->getPlayerDeck());
         // echo "<h2>Player 2 Deck:</h2>";
-        var_dump($this->players[1]->getPlayerDeck());
+        // var_dump($this->players[1]->getPlayerDeck());
         $this->isPlaying = true;
         $this->updatePlayerTurn();
     }
