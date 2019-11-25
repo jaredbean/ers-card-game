@@ -3,13 +3,14 @@
         var fncUrl = 'AjaxRequestHandlers.php';
         var game = {};
         var gameId = false;
+        var currentPlayer = {};
         var gameIntervalId = 0;
 
         $('#start-btn').click(onStartBtnClick);
 
         function onStartBtnClick(evt){
             console.log('start clicked');
-            var personName = $('#name-in').val();
+            currentPlayer.name = $('#name-in').val();
             gameId = $('#game-id-in').val();
 
                 $('#error-section').css('display', 'none');
@@ -19,13 +20,19 @@
                 $.post(fncUrl,
                     {
                         action: 'newGame',
-                        name: personName
+                        name: currentPlayer.name
                     },
                     function (response){
                         if (isJsonString(response)){
                             var responseValue = JSON.parse(response);
                             game = responseValue;
                             gameId = responseValue.gameId;
+
+                            // Get current player data.
+                            currentPlayer = game.players.find(function (p){
+                                return p.name === currentPlayer.name;
+                            });
+
                             startGame();
                         }
                         else {
@@ -37,16 +44,20 @@
             }
             else {
                 // Look up existing game.
-
                 $.post(fncUrl,
                     {
                         action: 'findGame',
                         gameId: gameId,
-                        name: personName
+                        name: currentPlayer.name
                     },
                     function (response){
                         if (isJsonString(response)){
                             game = JSON.parse(response);
+
+                            // Get current player data.
+                            currentPlayer = game.players.find(function (p){
+                                return p.name === currentPlayer.name;
+                            });
 
                             startGame();
                         }
@@ -82,16 +93,6 @@
                 });
         }
 
-        function saveGameState(){
-            $.post(fncUrl,
-                {
-                    action: 'saveGameState'
-                },
-                function (response){
-                    console.log('Game state saved');
-                })
-        }
-
         function startGame(){
             // Start the interval.
             gameIntervalId = setInterval(getGameState, 300);
@@ -107,6 +108,10 @@
             
         }
 
+        function displayGame(){
+
+        }
+
         function checkPlayerCount(){
             if (game.players.length < 2){
                 $('#wait-section').css('display', 'block');
@@ -116,6 +121,8 @@
                 $('#wait-section').css('display', 'none');
                 $('#game-section').css('display', 'block');
             }
+
+            return game.players.length < 2;
         }
 
         function isJsonString(jsonString){
