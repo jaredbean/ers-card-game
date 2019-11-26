@@ -6,10 +6,21 @@
         var currentPlayer = {};
         var gameIntervalId = 0;
 
+        function getCard(){
+            var suit = "C";
+
+            var value = "3";
+            var cardClass = "";
+            //remove old class
+            $('#top-card').removeClass();
+
+            // Add class
+            $('#top-card').addClass('card ' + value + '_' + suit)
+        }
+
         $('#start-btn').click(onStartBtnClick);
 
         function onStartBtnClick(evt){
-            console.log('start clicked');
             currentPlayer.name = $('#name-in').val();
             gameId = $('#game-id-in').val();
 
@@ -71,7 +82,6 @@
         }
         
         function getGameState(){
-            console.log(gameId);
             $.get(fncUrl,
                 {
                     action: 'getGame',
@@ -82,8 +92,6 @@
                         game = JSON.parse(response);
 
                         checkPlayerCount();
-
-                        console.log(game);
                     }
                     else {
                         $('#error-section').css('display', 'block');
@@ -96,7 +104,6 @@
         function startGame(){
             // Start the interval.
             gameIntervalId = setInterval(getGameState, 300);
-            console.log(gameIntervalId);
 
             // Hide the start game group.
             $('#start-section').css('display', 'none');
