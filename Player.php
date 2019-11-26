@@ -24,7 +24,7 @@ class Player
     /**
      * Player constructor.
      * @param string $username
-     * @param string $playerIp
+     * @param int $playerId
      */
     public function __construct(string $username, int $playerId)
     {

@@ -26,357 +26,348 @@ html {
 .reverse {
  width: 97px;
  height: 71px;
- background: radial-gradient(#ff0000, #ffffff);
- border-style: solid;
- border-color: black;
+ background: radial-gradient(#ff0000, #000000);
 }
 
-.empty {
+.ace_clubs {
  width: 71px;
  height: 97px;
- background: radial-gradient(#00ff00, #0000ff);
- border-style: solid;
- border-color: black;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -2px -1px;
 }
 
-.C_A {
+.two_clubs {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -2px -1px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -75px -1px;
 }
 
-.C_2 {
+.three_clubs {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -75px -1px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -148px -1px;
 }
 
-.C_3 {
+.four_clubs {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -148px -1px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -220px -1px;
 }
 
-.C_4 {
+.five_clubs {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -220px -1px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -294px -1px;
 }
 
-.C_5 {
+.six_clubs {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -294px -1px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -366px -1px;
 }
 
-.C_6 {
+.seven_clubs {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -366px -1px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -440px -1px;
 }
 
-.C_7 {
+.eight_clubs {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -440px -1px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -512px -1px;
 }
 
-.C_8 {
+.nine_clubs {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -512px -1px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -586px -1px;
 }
 
-.C_9 {
+.ten_clubs {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -586px -1px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -658px -1px;
 }
 
-.C_10 {
+.jack_clubs {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -658px -1px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -732px -1px;
 }
 
-.C_J {
+.queen_clubs {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -732px -1px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -804px -1px;
 }
 
-.C_Q {
+.king_clubs {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -804px -1px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -878px -1px;
 }
 
-.C_K {
+.ace_hearts {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -878px -1px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -2px -99px;
 }
 
-.H_A {
+.two_hearts {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -2px -99px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -75px -99px;
 }
 
-.H_2 {
+.three_hearts {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -75px -99px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -148px -99px;
 }
 
-.H_3 {
+.four_hearts {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -148px -99px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -220px -99px;
 }
 
-.H_4 {
+.five_hearts {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -220px -99px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -294px -99px;
 }
 
-.H_5 {
+.six_hearts {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -294px -99px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -366px -99px;
 }
 
-.H_6 {
+.seven_hearts {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -366px -99px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -440px -99px;
 }
 
-.H_7 {
+.eight_hearts {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -440px -99px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -512px -99px;
 }
 
-.H_8 {
+.nine_hearts {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -512px -99px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -586px -99px;
 }
 
-.H_9 {
+.ten_hearts {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -586px -99px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -658px -99px;
 }
 
-.H_10 {
+.jack_hearts {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -658px -99px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -732px -99px;
 }
 
-.H_J {
+.queen_hearts {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -732px -99px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -804px -99px;
 }
 
-.H_Q {
+.king_hearts {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -804px -99px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -878px -99px;
 }
 
-.H_K {
+.ace_spades {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -878px -99px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -2px -197px;
 }
 
-.S_A {
+.two_spades {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -2px -197px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -75px -197px;
 }
 
-.S_2 {
+.three_spades {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -75px -197px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -148px -197px;
 }
 
-.S_3 {
+.four_spades {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -148px -197px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -220px -197px;
 }
 
-.S_4 {
+.five_spades {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -220px -197px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -294px -197px;
 }
 
-.S_5 {
+.six_spades {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -294px -197px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -366px -197px;
 }
 
-.S_6 {
+.seven_spades {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -366px -197px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -440px -197px;
 }
 
-.S_7 {
+.eight_spades {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -440px -197px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -512px -197px;
 }
 
-.S_8 {
+.nine_spades {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -512px -197px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -586px -197px;
 }
 
-.S_9 {
+.ten_spades {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -586px -197px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -658px -197px;
 }
 
-.S_10 {
+.jack_spades {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -658px -197px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -732px -197px;
 }
 
-.S_J {
+.queen_spades {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -732px -197px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -804px -197px;
 }
 
-.S_Q {
+.king_spades {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -804px -197px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -878px -197px;
 }
 
-.S_K {
+.ace_diamonds {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -878px -197px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -2px -295px;
 }
 
-.D_A {
+.two_diamonds {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -2px -295px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -75px -295px;
 }
 
-.D_2 {
+.three_diamonds {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -75px -295px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -148px -295px;
 }
 
-.D_3 {
+.four_diamonds {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -148px -295px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -220px -295px;
 }
 
-.D_4 {
+.five_diamonds {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -220px -295px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -294px -295px;
 }
 
-.D_5 {
+.six_diamonds {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -294px -295px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -366px -295px;
 }
 
-.D_6 {
+.seven_diamonds {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -366px -295px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -440px -295px;
 }
 
-.D_7 {
+.eight_diamonds {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -440px -295px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -512px -295px;
 }
 
-.D_8 {
+.nine_diamonds {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -512px -295px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -586px -295px;
 }
 
-.D_9 {
+.ten_diamonds {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -586px -295px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -658px -295px;
 }
 
-.D_10 {
+.jack_diamonds {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -658px -295px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -732px -295px;
 }
 
-.D_J {
+.queen_diamonds {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -732px -295px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -804px -295px;
 }
 
-.D_Q {
+.king_diamonds {
  width: 71px;
  height: 97px;
- background: url(resources/windows-playing-cards.png) -804px -295px;
+ background: url(http://dobsondev.com/wp-content/uploads/2015/04/windows-playing-cards.png) -878px -295px;
 }
 
-.D_K {
- width: 71px;
- height: 97px;
- background: url(resources/windows-playing-cards.png) -878px -295px;
-}
-
-.discarded:nth-child(1) {
+#center-deck-five {
 	z-index: -5;
 	position: relative;
 	
 }
 
-.discarded:nth-child(2) {
+#center-deck-four {
 	z-index: -4;
 	position: absolute;
 	transform: translate(-75%);
 }
 
-.discarded:nth-child(3) {
+#center-deck-three {
 	z-index: -3;
 	position: absolute;
 	transform: translate(-50%);
 }
 
-.discarded:nth-child(4) {
+#center-deck-two {
 	z-index: -2;
 	position: absolute;
 	transform: translate(-25%);
 }
 
-.discarded:nth-child(5) {
+#center-deck-one {
 	z-index: -1;
 	position: relative;
 }
+
 

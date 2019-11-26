@@ -6,7 +6,7 @@
 class Card
 {
     /**
-     * A string that represents the suit of a card ('C', 'D', 'H', 'S'; Club, Diamond, Heart, Spade).
+     * A string that represents the suit of a card ('C', 'D', 'H', 'S'; Clubs, Diamonds, Hearts, Spades).
      */
     public $suit = "";
 

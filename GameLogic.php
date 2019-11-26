@@ -30,24 +30,20 @@ function createGame($conn, $name)
 
     $game->addPlayer($name, 0);
 
-    $game->writeGameToDB();
+    // Insert new game into EgyptianRatScrew.
+    $query = "Insert Into EgyptianRatScrew (GameObject) Values ('" . json_encode($game) . "');";
 
-    // // Insert new game into EgyptianRatScrew.
-    // $query = "Insert Into EgyptianRatScrew (GameObject) Values ('" . json_encode($game) . "');";
+    if ($conn->query($query)) {
+        // Assign game Id to the game object.
+        $newId = $conn->insert_id;
+        $game->gameId = $newId;
 
-    // if ($conn->query($query)) {
-    //     // Assign game Id to the game object.
-    //     $newId = $conn->insert_id;
-    //     $game->gameId = $newId;
-
-    //     // Re-save the game state.
-    //     saveGameState($conn, $game, $newId);
-    //     return $game;
-    // } else {
-    //     die($conn->error);
-    // };
-
-    return $game;
+        // Re-save the game state.
+        saveGameState($conn, $game, $newId);
+        return $game;
+    } else {
+        die($conn->error);
+    };
 }
 
 function findGame($conn, $gameId, $name){
@@ -66,10 +62,6 @@ function findGame($conn, $gameId, $name){
 
     return $gameObject;
 
-}
-
-function playCard($conn, $gameId, $playerId){
-    
 }
 
 /**

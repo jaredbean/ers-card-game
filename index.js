@@ -6,22 +6,10 @@
         var currentPlayer = {};
         var gameIntervalId = 0;
 
-        function getCard(){
-            var suit = "C";
-
-            var value = "3";
-            var cardClass = "";
-            //remove old class
-            $('#top-card').removeClass();
-
-            // Add class
-            $('#top-card').addClass('card ' + value + '_' + suit)
-        }
-
         $('#start-btn').click(onStartBtnClick);
-        $('#draw').click(onDrawClick);
 
         function onStartBtnClick(evt){
+            console.log('start clicked');
             currentPlayer.name = $('#name-in').val();
             gameId = $('#game-id-in').val();
 
@@ -81,17 +69,9 @@
                     });
             }
         }
-
-        function onDrawClick(){
-            $.post(fncUrl,
-                {
-                    action: 'playCard',
-                    gameId: game.gameId,
-                    playerId: currentPlayer.playerId
-                });
-        }
         
         function getGameState(){
+            console.log(gameId);
             $.get(fncUrl,
                 {
                     action: 'getGame',
@@ -102,6 +82,8 @@
                         game = JSON.parse(response);
 
                         checkPlayerCount();
+
+                        console.log(game);
                     }
                     else {
                         $('#error-section').css('display', 'block');
@@ -114,6 +96,7 @@
         function startGame(){
             // Start the interval.
             gameIntervalId = setInterval(getGameState, 300);
+            console.log(gameIntervalId);
 
             // Hide the start game group.
             $('#start-section').css('display', 'none');
@@ -122,9 +105,11 @@
 
             // Show the game.
             checkPlayerCount();
-            if (game.players[game.indexOfPlayersTurn].playerId !== currentPlayer.playerId){
-                $('#draw').enable(false);
-            }
+            
+        }
+
+        function displayGame(){
+
         }
 
         function checkPlayerCount(){
