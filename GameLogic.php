@@ -46,6 +46,8 @@ function createGame($conn, $name)
     // } else {
     //     die($conn->error);
     // };
+
+    return $game;
 }
 
 function findGame($conn, $gameId, $name){
@@ -64,6 +66,10 @@ function findGame($conn, $gameId, $name){
 
     return $gameObject;
 
+}
+
+function playCard($conn, $gameId, $playerId){
+    
 }
 
 /**

@@ -19,6 +19,7 @@
         }
 
         $('#start-btn').click(onStartBtnClick);
+        $('#draw').click(onDrawClick);
 
         function onStartBtnClick(evt){
             currentPlayer.name = $('#name-in').val();
@@ -80,6 +81,15 @@
                     });
             }
         }
+
+        function onDrawClick(){
+            $.post(fncUrl,
+                {
+                    action: 'playCard',
+                    gameId: game.gameId,
+                    playerId: currentPlayer.playerId
+                });
+        }
         
         function getGameState(){
             $.get(fncUrl,
@@ -112,11 +122,9 @@
 
             // Show the game.
             checkPlayerCount();
-            
-        }
-
-        function displayGame(){
-
+            if (game.players[game.indexOfPlayersTurn].playerId !== currentPlayer.playerId){
+                $('#draw').enable(false);
+            }
         }
 
         function checkPlayerCount(){

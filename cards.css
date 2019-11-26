@@ -351,33 +351,32 @@ html {
  background: url(resources/windows-playing-cards.png) -878px -295px;
 }
 
-#center-deck-five {
+.discarded:nth-child(1) {
 	z-index: -5;
 	position: relative;
 	
 }
 
-#center-deck-four {
+.discarded:nth-child(2) {
 	z-index: -4;
 	position: absolute;
 	transform: translate(-75%);
 }
 
-#center-deck-three {
+.discarded:nth-child(3) {
 	z-index: -3;
 	position: absolute;
 	transform: translate(-50%);
 }
 
-#center-deck-two {
+.discarded:nth-child(4) {
 	z-index: -2;
 	position: absolute;
 	transform: translate(-25%);
 }
 
-#center-deck-one {
+.discarded:nth-child(5) {
 	z-index: -1;
 	position: relative;
 }
-
 
