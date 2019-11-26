@@ -26,7 +26,17 @@ html {
 .reverse {
  width: 97px;
  height: 71px;
- background: radial-gradient(#ff0000, #000000);
+ background: radial-gradient(#ff0000, #ffffff);
+ border-style: solid;
+ border-color: black;
+}
+
+.empty {
+ width: 71px;
+ height: 97px;
+ background: radial-gradient(#00ff00, #0000ff);
+ border-style: solid;
+ border-color: black;
 }
 
 .ace_clubs {
