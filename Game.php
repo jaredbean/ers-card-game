@@ -24,7 +24,7 @@ class Game
     /**
      * A deck object that represents the discard deck of the game where players place their cards and can slap.
      */
-    public $discardDeck = null;
+    //public $discardDeck = null;
     /**
      * A bool that determines if the game is in the plays state.
      */
@@ -103,7 +103,7 @@ class Game
 
     public function playCard(int $playerID)
     {
-        $player = $this->player[$this->getIndexOfPlayerID($playerID)];
+        $player = $this->players[$this->getIndexOfPlayerID($playerID)];
         $this->moveCardsToDeck($player->getPlayerDeck(), $this->gameDeck, 1);
         $this->updatePlayerTurn();
     }
@@ -111,10 +111,9 @@ class Game
     public function getIndexOfPlayerID(int $playerID)
     {
         $index = 0;
-
         while ($index < sizeof($this->players))
         {
-            if ($this->player[$index]->getPlayerId() === $playerID)
+            if ($this->players[$index]->getPlayerId() === $playerID)
             {
                 return $index;
             }
@@ -212,6 +211,7 @@ class Game
     {
         echo "<h2>Game Deck</h2>";
         echo $this->showTopCards($this->gameDeck, 5);
+        echo "<p>Size: " . $this->gameDeck->getSize() . "</p>";
 
         echo "<h2>Player 1 Deck</h2>";
         echo $this->showTopCards($this->players[0]->getPlayerDeck(), 5);
@@ -225,14 +225,15 @@ class Game
         $showCards = array();
         $deckCards = $deck->getCards();
         $index = sizeof($deckCards) - 1; // 'top' card
+        // Returns $numCards if deck is big enough, if not, returns max possible.
+        $maxCards = $index >= $numCards ? $numCards : $deck->getSize();
 
-        if ($index >= $numCards)
+        for ($i = 0; $i < $maxCards; $i++)
         {
-            for ($i = 0; $i < $numCards; $i++) {
-                $showCards[] = $deckCards[$index];
-                $index--;
-            }
+            $showCards[] = $deckCards[$index];
+            $index--;
         }
+
         return json_encode($showCards);
     }
 

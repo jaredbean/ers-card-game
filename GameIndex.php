@@ -7,9 +7,15 @@ $game = new Game();
 $game->addPlayer("Joe Dirt", "1");
 $game->addPlayer("Leroy Jenkins", "2");
 $game->start();
-$game->writeGameToDB();
 $game->displayDecks();
-echo "<h2>Json from DB</h2>" . $game->readGameFromDB();
+for ($i = 0; $i < 26; $i++) {
+    $game->playCard(1);
+    $game->playCard(2);
+}
+
+$game->displayDecks();
+//$game->writeGameToDB();
+//echo "<h2>Json from DB</h2>" . $game->readGameFromDB();
 
 // Debugging
 //echo '<h2>Game object dump</h2>';

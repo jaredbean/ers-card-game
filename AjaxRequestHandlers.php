@@ -49,10 +49,6 @@
                     die('findGame: Name and Game ID are required for this function.');
                 }
                 break;
-            // case 'playCard':
-            //     if (isset($_POST['gameId']) && isset($_POST['playerId'])){
-            //         playCard($conn, $_POST)
-            //     }
             
             // case 'saveGameState':
             // $jsonString = $_POST['gameState'];

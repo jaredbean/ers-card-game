@@ -14,7 +14,7 @@ class Player
     /**
      * A number to identify the player.
      */
-    public $playerId = null;
+    public $playerId = -1;
 
     /**
      * A Deck object that represents the players deck.
