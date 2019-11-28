@@ -20,6 +20,7 @@
 
         $('#start-btn').click(onStartBtnClick);
         $('#draw').click(onDrawClick);
+        $('#slap').click(onSlapClick);
 
         function onStartBtnClick(evt){
             currentPlayer.name = $('#name-in').val();
@@ -86,6 +87,15 @@
             $.post(fncUrl,
                 {
                     action: 'playCard',
+                    gameId: game.gameId,
+                    playerId: currentPlayer.playerId
+                });
+        }
+
+        function onSlapClick(){
+            $.post(fncUrl,
+                {
+                    action: 'slapCard',
                     gameId: game.gameId,
                     playerId: currentPlayer.playerId
                 });

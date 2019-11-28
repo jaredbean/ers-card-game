@@ -69,7 +69,15 @@ function findGame($conn, $gameId, $name){
 }
 
 function playCard($conn, $gameId, $playerId){
-    
+    $game = getGame($conn, $gameId);
+
+    $game->playCard($playerId);
+}
+
+function slapCard($conn, $gameId, $playerId){
+    $game = getGame($conn, $gameId);
+
+    $game->slapCard($playerId);
 }
 
 /**
