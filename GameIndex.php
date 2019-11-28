@@ -7,12 +7,14 @@ $game = new Game();
 $game->addPlayer("Joe Dirt", "1");
 $game->addPlayer("Leroy Jenkins", "2");
 $game->start();
+
+echo '<h2>Displaying top 5 cards for each deck.</h2>';
 $game->displayDecks();
 for ($i = 0; $i < 26; $i++) {
     $game->playCard(1);
     $game->playCard(2);
 }
-
+echo '<h2>Player 1 and player 2 each played 26 hands</h2>';
 $game->displayDecks();
 //$game->writeGameToDB();
 //echo "<h2>Json from DB</h2>" . $game->readGameFromDB();
