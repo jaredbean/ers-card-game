@@ -49,6 +49,7 @@
                     die('findGame: Name and Game ID are required for this function.');
                 }
                 break;
+<<<<<<< HEAD
             case 'playCard':
                 if (isset($_POST['gameId']) && isset($_POST['playerId'])){
                     playCard($conn, $_POST['gameId'], $_POST['playerId']);
@@ -65,6 +66,17 @@
                     die('slapCard: gameId and playerId are required for this function.');
                 }
                 break;
+=======
+            
+            // case 'saveGameState':
+            // $jsonString = $_POST['gameState'];
+            // $query = "Insert Into ErsJson (JsonObject) Values ('" . $_POST['gameState'] . "';";
+        
+            // $results = mysqli_query($conn, $query) or die(mysqli_error($conn));
+
+            // // echo $row['jsonObject'];
+            // break;
+>>>>>>> 44f07b244daf3d236e652e72cf1a828c69e93e39
         }
     }
 ?>

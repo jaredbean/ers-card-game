@@ -35,52 +35,54 @@ class Deck
      */
     public function generateGameDeck()
     {
-        $clubs = $this->generateSuit('C');
-        $this->addCardsToTop($clubs);
-        $diamonds = $this->generateSuit('D');
-        $this->addCardsToTop($diamonds);
-        $hearts = $this->generateSuit('H');
-        $this->addCardsToTop($hearts);
-        $spades = $this->generateSuit('S');
-        $this->addCardsToTop($spades);
-
+        $suits = array('C', 'D', 'H', 'S');
+        $newGameDeck = $this->generateSuits($suits);
+        $this->addCardsToTop($newGameDeck);
         $this->shuffleDeck();
     }
 
-    public function generateSuit(string $suit): array
+    /**
+     * A function that generates a deck with 14 cards for each suit.
+     * @param array $suits: The suits of the deck.
+     * @return array: A deck with all required suits.
+     */
+    public function generateSuits(array $suits): array
     {
-        $cardsOfSuit = array();
+        $gameDeck = array();
 
-        for ($i = 2; $i <= 14; $i++)
+        foreach ($suits as $suit)
         {
-            $value = '';
-            switch($i) {
-                case 14:
-                    $value = 'A';
-                    break;
-                case 13:
-                    $value = 'K';
-                    break;
-                case 12:
-                    $value = 'Q';
-                    break;
-                case 11:
-                    $value = 'J';
-                    break;
-                default:
-                    $value = $i;
+            for ($i = 2; $i <= 14; $i++)
+            {
+                $cardValue = '';
+                switch ($i)
+                {
+                    case 14:
+                        $cardValue = 'A';
+                        break;
+                    case 13:
+                        $cardValue = 'K';
+                        break;
+                    case 12:
+                        $cardValue = 'Q';
+                        break;
+                    case 11:
+                        $cardValue = 'J';
+                        break;
+                    default:
+                        $cardValue = $i;
+                }
+                $gameDeck[] = new Card($suit, $cardValue);
             }
-            $cardsOfSuit[] = new Card($suit, $value);
         }
-        return $cardsOfSuit;
+        return $gameDeck;
     }
 
     public function shuffleDeck()
     {
-        $numberOfCards = sizeof($this->cards);
-        for ($i = 0; $i < $numberOfCards; $i++)
+        for ($i = 0; $i < $this->size; $i++)
         {
-            $randIndex = rand(0, $numberOfCards -  1);
+            $randIndex = rand(0, $this->size -  1);
             $temp = $this->cards[$i];
             $this->cards[$i] = $this->cards[$randIndex];
             $this->cards[$randIndex] = $temp;
@@ -115,23 +117,25 @@ class Deck
     }
 
     /**
-     * A function that removes a card from the top of the deck.
+     * A function that removes cards from the top of the deck and returns them.
      * @param int $numCards: The number of cards to be removed from the top.
      * @return array : An array of card removed from the top of the deck.
      */
     public function removeCardsFromTop(int $numCards): array
     {
-        if ($this->size >= 0)
+        if ($this->size >= $numCards)
         {
             $cardArray = array();
-            $counter = $numCards;
-            while ($counter > 0)
+            //$counter = $numCards;
+            //while ($counter > 0)
+            while ($numCards > 0)
             {
                 $cardArray[] = array_pop($this->cards);
-                $counter--;
+                //$counter--;
+                $numCards--;
+                $this->size--;
             }
-            $this->size -= $numCards;
-
+            //$this->size -= $numCards;
             return $cardArray;
         }
         else
@@ -189,7 +193,7 @@ class Deck
      * A function that sets the value representing if the deck is able to be clicked.
      * @param bool $flag: A bool representing if the deck should be able to be clicked.
      */
-    public function setClickable(bool $flag)
+    public function setIsClickable(bool $flag)
     {
         $this->isClickable = $flag;
     }
