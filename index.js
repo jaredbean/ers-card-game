@@ -93,6 +93,18 @@
                 });
         }
 
+        function updateDiscardPile(){
+            var newDiscardPileElements = [];
+            $('#discard-pile').empty();
+            var topFiveCards = game.discardDeck.cards.slice(0, 5);
+            topFiveCards.forEach(function (card){
+                var element = $('div');
+                element.addClass('card ' + card.suit + '_' + card.value);
+
+                $('#discard-pile').prepend(element);
+            });
+        }
+
         function startGame(){
             // Start the interval.
             gameIntervalId = setInterval(getGameState, 300);
