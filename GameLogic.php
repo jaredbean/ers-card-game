@@ -30,30 +30,36 @@ function createGame($conn, $name)
 
     $game->addPlayer($name, 0);
 
+    $game->writeGameToDB();
+
+    return $game;
     // Insert new game into EgyptianRatScrew.
-    $query = "Insert Into EgyptianRatScrew (GameObject) Values ('" . json_encode($game) . "');";
+    // $query = "Insert Into EgyptianRatScrew (GameObject) Values ('" . json_encode($game) . "');";
 
-    if ($conn->query($query)) {
-        // Assign game Id to the game object.
-        $newId = $conn->insert_id;
-        $game->gameId = $newId;
+    // if ($conn->query($query)) {
+    //     // Assign game Id to the game object.
+    //     $newId = $conn->insert_id;
+    //     $game->gameId = $newId;
 
-        // Re-save the game state.
-        saveGameState($conn, $game, $newId);
-        return $game;
-    } else {
-        die($conn->error);
-    };
+    //     // Re-save the game state.
+    //     saveGameState($conn, $game, $newId);
+    //     return $game;
+    // } else {
+    //     die($conn->error);
+    // };
 }
 
 function findGame($conn, $gameId, $name){
-    $gameObject = getGame($conn, $gameId);
+    $gameObject = new Game();
 
-    $parsedGame = cast('Game', $gameObject);
+    $gameObject->gameId = $gameId;
 
-    $playerCount = count($parsedGame->players);
-    $parsedGame->addPlayer($name, $playerCount - 1);
+    $parsedGame = cast('Game', $gameObject->readGameFromDB());
 
+    $playerCount = sizeof($parsedGame->players);
+    $parsedGame->addPlayer($name, $playerCount);
+
+    var_dump($parsedGame);
     if ($playerCount > 1){
         $parsedGame->start();
     }
@@ -64,21 +70,26 @@ function findGame($conn, $gameId, $name){
 
 }
 
-<<<<<<< HEAD
 function playCard($conn, $gameId, $playerId){
-    $game = getGame($conn, $gameId);
+    $game = new Game();
+
+    $game->gameId = $gameId;
+
+    $game = cast('Game', $game->readGameFromDB());
 
     $game->playCard($playerId);
 }
 
 function slapCard($conn, $gameId, $playerId){
-    $game = getGame($conn, $gameId);
+    $game = new Game();
+
+    $game->gameId = $gameId;
+
+    $game = cast('Game', $game->readGameFromDB());
 
     $game->slapCard($playerId);
 }
 
-=======
->>>>>>> 44f07b244daf3d236e652e72cf1a828c69e93e39
 /**
  * Update the current game state.
  */

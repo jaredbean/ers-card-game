@@ -7,14 +7,10 @@
         var gameIntervalId = 0;
 
         $('#start-btn').click(onStartBtnClick);
-<<<<<<< HEAD
         $('#draw').click(onDrawClick);
         $('#slap').click(onSlapClick);
-=======
->>>>>>> 44f07b244daf3d236e652e72cf1a828c69e93e39
 
         function onStartBtnClick(evt){
-            console.log('start clicked');
             currentPlayer.name = $('#name-in').val();
             gameId = $('#game-id-in').val();
 
@@ -74,7 +70,6 @@
                     });
             }
         }
-<<<<<<< HEAD
 
         function onDrawClick(){
             $.post(fncUrl,
@@ -93,8 +88,6 @@
                     playerId: currentPlayer.playerId
                 });
         }
-=======
->>>>>>> 44f07b244daf3d236e652e72cf1a828c69e93e39
         
         function getGameState(){
             console.log(gameId);
@@ -107,9 +100,13 @@
                     if (isJsonString(response)){
                         game = JSON.parse(response);
 
-                        checkPlayerCount();
-
-                        console.log(game);
+                        // Show/Hides sections of the game.
+                        if (game.isPlaying){
+                            checkPlayerCount();
+                        }
+                        
+                        // Shows top five cards in the discard pile.
+                        updateDiscardPile();
                     }
                     else {
                         $('#error-section').css('display', 'block');
@@ -120,14 +117,22 @@
         }
 
         function updateDiscardPile(){
-            var newDiscardPileElements = [];
+            // Clear the elements in discard pile.
             $('#discard-pile').empty();
-            var topFiveCards = game.discardDeck.cards.slice(0, 5);
+
+            var startIdx = game.discardDeck.cards.length-6;
+
+            // Check if discard pile length is less than 5.
+            if (startIdx < 0){
+                startIdx = 0;
+            }
+            var topFiveCards = game.discardDeck.cards.slice(startIdx, game.discardDeck.cards.length);
+
             topFiveCards.forEach(function (card){
                 var element = $('div');
                 element.addClass('card ' + card.suit + '_' + card.value);
 
-                $('#discard-pile').prepend(element);
+                $('#discard-pile').append(element);
             });
         }
 

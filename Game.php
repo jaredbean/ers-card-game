@@ -204,7 +204,7 @@ class Game
         $sth->setFetchMode(PDO::FETCH_ASSOC);
         $sth->execute();
         $row = $sth->fetch();
-        return $row['GameObject'];
+        return json_decode($row['GameObject']);
     }
 
     public function displayDecks()
