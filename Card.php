@@ -3,7 +3,7 @@
 /**
  * A class that represents a card.
  */
-class Card
+class Card implements JsonSerializable
 {
     /**
      * A string that represents the suit of a card ('C', 'D', 'H', 'S'; Clubs, Diamonds, Hearts, Spades).
@@ -56,5 +56,20 @@ class Card
     public function setValue(string $value): void
     {
         $this->value = $value;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'suit' => $this->suit,
+            'value' => $this->value
+        ];
     }
 }

@@ -4,7 +4,7 @@ require_once "Deck.php";
 /**
  * A class that represents a player in the game.
  */
-class Player
+class Player implements JsonSerializable
 {
     /**
      * A string that represents the players username.
@@ -79,5 +79,21 @@ class Player
     public function setPlayerDeck($playerDeck): void
     {
         $this->playerDeck = $playerDeck;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'userName' => $this->username,
+            'playerId' => $this->playerId,
+            'playerDeck' => $this->playerDeck
+        ];
     }
 }

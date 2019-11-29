@@ -16,8 +16,22 @@ for ($i = 0; $i < 26; $i++) {
 }
 echo '<h2>Player 1 and player 2 each played 26 hands</h2>';
 $game->displayDecks();
-//$game->writeGameToDB();
-//echo "<h2>Json from DB</h2>" . $game->readGameFromDB();
+$game->writeGameToDB();
+
+echo "<h2>Original PHP Game Object</h2>";
+var_dump($game);
+//echo "<h2>json_decode from DB</h2>";
+//var_dump($game->readGameFromDB());
+echo "<h2>unserialize() from DB</h2>";
+$gameFromDB = $game->readGameFromDB();
+var_dump($gameFromDB);
+echo '<h2>Test DB Game object unserialized: isPlaying = ' . $gameFromDB->getIsPlaying() . '</h2>';
+//$serializedGame = serialize($game);
+//var_dump(unserialize($serializedGame));
+echo '<h2>Get DB Game object as json</h2>';
+echo $gameFromDB->readGameFromDB('json');
+
+//echo $gameFromDB->Game->isPlaying;
 
 // Debugging
 //echo '<h2>Game object dump</h2>';

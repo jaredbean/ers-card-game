@@ -7,7 +7,7 @@ require_once 'DatabaseConnection.php';
 /**
  * The Game class represents the game of Egyptian Rat Screw.
  */
-class Game
+class Game implements JsonSerializable
 {
     /**
      * The game ID used for other players to connect to the game.
@@ -170,9 +170,12 @@ class Game
 
     }
 
+    /***
+     * Writes a string representation of the string object to the DB using serialize().
+     */
     public function writeGameToDB()
     {
-        $gameObject = json_encode($this);
+        $gameObject = serialize($this);
         $dbh = DatabaseConnection::getInstance();
         if ($this->gameId === -1)
         {
@@ -196,15 +199,31 @@ class Game
         }
     }
 
-    public function readGameFromDB()
+    /***
+     * Returns a PHP Game object using unserialize() if no arguments are passed in, or returns a
+     * json string if the argument 'json' is passed in.
+     * @param string|null $arg
+     * @return mixed
+     */
+    // TODO: Make static function, pass in GameID
+    public function readGameFromDB(string $arg = null)
     {
-        $dbh = DatabaseConnection::getInstance();
-        $sth = $dbh->prepare('SELECT * FROM `EgyptianRatScrew` WHERE `GameID` = :gameID');
-        $sth->bindParam(':gameID', $this->gameId);
-        $sth->setFetchMode(PDO::FETCH_ASSOC);
-        $sth->execute();
-        $row = $sth->fetch();
-        return json_decode($row['GameObject']);
+        if ($arg != null && $arg != 'json')
+        {
+            echo 'Invalid argument to readGameFromDB.';
+        }
+        else
+        {
+            $dbh = DatabaseConnection::getInstance();
+            $sth = $dbh->prepare('SELECT * FROM `EgyptianRatScrew` WHERE `GameID` = :gameID');
+            $sth->bindParam(':gameID', $this->gameId);
+            $sth->setFetchMode(PDO::FETCH_ASSOC);
+            $sth->execute();
+            $row = $sth->fetch();
+            $gameObject = unserialize($row['GameObject']);
+
+            return $arg == null ? $gameObject : json_encode($gameObject);
+        }
     }
 
     public function displayDecks()
@@ -315,5 +334,23 @@ class Game
     public function setPlayerIndex($playerIndex): void
     {
         $this->playerIndex = $playerIndex;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'gameId' => $this->gameId,
+            'players' => $this->players,
+            'gameDeck' => $this->gameDeck,
+            'isPlaying' => $this->isPlaying,
+            'playerIndex' => $this->playerIndex
+        ];
     }
 }

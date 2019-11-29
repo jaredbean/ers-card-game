@@ -4,7 +4,7 @@ require_once "Card.php";
 /**
  * A class that represents a deck of cards.
  */
-class Deck
+class Deck implements JsonSerializable
 {
     /**
      * An array of Card objects that are contained in the deck.
@@ -196,5 +196,21 @@ class Deck
     public function setIsClickable(bool $flag)
     {
         $this->isClickable = $flag;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'cards' => $this->cards,
+            'size' => $this->size,
+            'isClickable' => $this->isClickable
+        ];
     }
 }
