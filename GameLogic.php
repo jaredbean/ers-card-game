@@ -56,9 +56,15 @@ function playCard($gameId, $playerId){
 
     $game->gameId = $gameId;
 
-    $game = cast('Game', $game->readGameFromDB());
+    $game = $game->readGameFromDB();
 
     $game->playCard($playerId);
+
+    $game->writeGameToDB();
+
+    // $gameJson = $game->readGameFromDB('json');
+    
+    // return $gameJson;
 }
 
 function slapCard($gameId, $playerId){
@@ -66,7 +72,7 @@ function slapCard($gameId, $playerId){
 
     $game->gameId = $gameId;
 
-    $game = cast('Game', $game->readGameFromDB());
+    $game = $game->readGameFromDB();
 
     $game->slapCard($playerId);
 }

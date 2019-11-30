@@ -7,10 +7,15 @@
         var opponent = false;
         var gameIntervalId = 0;
 
+        // Add click event handlers.
         $('#start-btn').click(onStartBtnClick);
         $('#draw').click(onDrawClick);
         $('#slap').click(onSlapClick);
 
+        /**
+         * Saves the player info to a new or existing game and starts the game.
+         * @param {event} evt the event data.
+         */
         function onStartBtnClick(evt){
             currentPlayer.userName = $('#name-in').val();
             gameId = $('#game-id-in').val();
@@ -62,15 +67,32 @@
             }
         }
 
+        /**
+         * Draw button event handler. Calls the play card server function.
+         */
         function onDrawClick(){
             $.post(fncUrl,
                 {
                     action: 'playCard',
                     gameId: game.gameId,
                     playerId: currentPlayer.playerId
-                });
+                }//,
+                // function (response){
+                //     if (isJsonString(response)){
+                //         console.log(JSON.parse(response));
+                //     }
+                //     else {
+                //         $('#error-section').css('display', 'block');
+                //         // if it's a string, put it in error message section.
+                //         $('#error-section').html(response);
+                //     }
+                // }
+                );
         }
 
+        /**
+         * Slap button event handler. Calls the slap card server function.
+         */
         function onSlapClick(){
             $.post(fncUrl,
                 {
@@ -79,7 +101,30 @@
                     playerId: currentPlayer.playerId
                 });
         }
+
+        /**
+         * Starts the interval that checks the game state and updates the display to start the game.
+         */
+        function startGame(){
+            // Get current player data.
+            currentPlayer = game.players.find(function (p){
+                return p.userName === currentPlayer.userName;
+            });
+
+            $('#current-player-name').html('<strong>' + currentPlayer.userName + '</strong>');
+            // Start the interval.
+            gameIntervalId = setInterval(getGameState, 300);
+
+            // Hide the start game group.
+            $('#start-section').css('display', 'none');
+
+            $('.game-id').html(game.gameId);
+            
+        }
         
+        /**
+         * Checks the game state and updates the UI according to it.
+         */
         function getGameState(){
             $.get(fncUrl,
                 {
@@ -101,9 +146,9 @@
                         checkPlayerCount();
                         // Show/Hides sections of the game.
                         if (game.isPlaying){
-
+                            console.log(game);
                             // Shows top five cards in the discard pile.
-                            updateDiscardPile();
+                            // updateDiscardPile();
                         }
                         
                     }
@@ -115,44 +160,13 @@
                 });
         }
 
-        function updateDiscardPile(){
-            // Clear the elements in discard pile.
-            $('#discard-pile').empty();
-
-            var startIdx = game.gameDeck.cards.length-6;
-
-            // Check if discard pile length is less than 5.
-            if (startIdx < 0){
-                startIdx = 0;
-            }
-            var topFiveCards = game.gameDeck.cards.slice(startIdx, game.gameDeck.cards.length);
-
-            topFiveCards.forEach(function (card){
-                var element = $('div');
-                element.addClass('card ' + card.suit + '_' + card.value);
-
-                $('#discard-pile').append(element);
-            });
-        }
-
-        function startGame(){
-            // Get current player data.
-            currentPlayer = game.players.find(function (p){
-                return p.userName === currentPlayer.userName;
-            });
-
-            $('#current-player-name').html('<strong>' + currentPlayer.userName + '</strong>');
-            // Start the interval.
-            gameIntervalId = setInterval(getGameState, 300);
-
-            // Hide the start game group.
-            $('#start-section').css('display', 'none');
-
-            $('.game-id').html(game.gameId);
-            
-        }
-
+        /**
+         * Updates the display according to the player count and 
+         * player data.
+         */
         function checkPlayerCount(){
+            
+            // Show or hide the game section according to the player count.
             if (game.players.length < 2){
                 $('#wait-section').css('display', 'block');
                 $('#game-section').css('display', 'none');
@@ -180,7 +194,35 @@
 
             return game.players.length < 2;
         }
+        
+        /**
+         * Display cards in the discard pile according to the game deck property 
+         * on the game object.
+         */
+        function updateDiscardPile(){
+            // Clear the elements in discard pile.
+            $('#discard-pile').empty();
 
+            var startIdx = game.gameDeck.cards.length-6;
+
+            // Check if discard pile length is less than 5.
+            if (startIdx < 0){
+                startIdx = 0;
+            }
+            var topFiveCards = game.gameDeck.cards.slice(startIdx, game.gameDeck.cards.length);
+
+            topFiveCards.forEach(function (card){
+                var element = $('div');
+                element.addClass('card ' + card.suit + '_' + card.value);
+
+                $('#discard-pile').append(element);
+            });
+        }
+
+        /**
+         * Checks a string to determine if it's in a JSON format.
+         * @param {string} jsonString the string to check.
+         */
         function isJsonString(jsonString){
             try {
                 JSON.parse(jsonString);
