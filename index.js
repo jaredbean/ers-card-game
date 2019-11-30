@@ -4,6 +4,7 @@
         var game = {};
         var gameId = false;
         var currentPlayer = {};
+        var opponent = false;
         var gameIntervalId = 0;
 
         $('#start-btn').click(onStartBtnClick);
@@ -11,7 +12,7 @@
         $('#slap').click(onSlapClick);
 
         function onStartBtnClick(evt){
-            currentPlayer.name = $('#name-in').val();
+            currentPlayer.userName = $('#name-in').val();
             gameId = $('#game-id-in').val();
 
                 $('#error-section').css('display', 'none');
@@ -21,18 +22,13 @@
                 $.post(fncUrl,
                     {
                         action: 'newGame',
-                        name: currentPlayer.name
+                        name: currentPlayer.userName
                     },
                     function (response){
                         if (isJsonString(response)){
                             var responseValue = JSON.parse(response);
                             game = responseValue;
                             gameId = responseValue.gameId;
-
-                            // Get current player data.
-                            currentPlayer = game.players.find(function (p){
-                                return p.name === currentPlayer.name;
-                            });
 
                             startGame();
                         }
@@ -49,16 +45,11 @@
                     {
                         action: 'findGame',
                         gameId: gameId,
-                        name: currentPlayer.name
+                        name: currentPlayer.userName
                     },
                     function (response){
                         if (isJsonString(response)){
                             game = JSON.parse(response);
-
-                            // Get current player data.
-                            currentPlayer = game.players.find(function (p){
-                                return p.name === currentPlayer.name;
-                            });
 
                             startGame();
                         }
@@ -90,7 +81,6 @@
         }
         
         function getGameState(){
-            console.log(gameId);
             $.get(fncUrl,
                 {
                     action: 'getGame',
@@ -100,13 +90,22 @@
                     if (isJsonString(response)){
                         game = JSON.parse(response);
 
+                        if (!opponent && game.players.length > 1){
+                            opponent = game.players.find(function (p){
+                                return p.playerId !== currentPlayer.playerId;
+                            });
+
+                            $('#opponent-name').html('<strong>' + opponent.userName + '</strong>');
+                        }
+
+                        checkPlayerCount();
                         // Show/Hides sections of the game.
                         if (game.isPlaying){
-                            checkPlayerCount();
+
+                            // Shows top five cards in the discard pile.
+                            updateDiscardPile();
                         }
                         
-                        // Shows top five cards in the discard pile.
-                        updateDiscardPile();
                     }
                     else {
                         $('#error-section').css('display', 'block');
@@ -120,13 +119,13 @@
             // Clear the elements in discard pile.
             $('#discard-pile').empty();
 
-            var startIdx = game.discardDeck.cards.length-6;
+            var startIdx = game.gameDeck.cards.length-6;
 
             // Check if discard pile length is less than 5.
             if (startIdx < 0){
                 startIdx = 0;
             }
-            var topFiveCards = game.discardDeck.cards.slice(startIdx, game.discardDeck.cards.length);
+            var topFiveCards = game.gameDeck.cards.slice(startIdx, game.gameDeck.cards.length);
 
             topFiveCards.forEach(function (card){
                 var element = $('div');
@@ -137,22 +136,20 @@
         }
 
         function startGame(){
+            // Get current player data.
+            currentPlayer = game.players.find(function (p){
+                return p.userName === currentPlayer.userName;
+            });
+
+            $('#current-player-name').html('<strong>' + currentPlayer.userName + '</strong>');
             // Start the interval.
             gameIntervalId = setInterval(getGameState, 300);
-            console.log(gameIntervalId);
 
             // Hide the start game group.
             $('#start-section').css('display', 'none');
 
             $('.game-id').html(game.gameId);
-
-            // Show the game.
-            checkPlayerCount();
             
-        }
-
-        function displayGame(){
-
         }
 
         function checkPlayerCount(){
@@ -163,6 +160,22 @@
             else {
                 $('#wait-section').css('display', 'none');
                 $('#game-section').css('display', 'block');
+
+                // Set current player info
+                currentPlayer = game.players.find(function (p){
+                    return p.playerId === currentPlayer.playerId;
+                });
+
+                $('#current-player-card-count').html(currentPlayer.playerDeck.cards.length);
+
+                // Set opponent info
+                if (opponent){
+                    opponent = game.players.find(function (p){
+                        return p.playerId === opponent.playerId;
+                    });
+    
+                    $('#opponent-card-count').html(opponent.playerDeck.cards.length);
+                }
             }
 
             return game.players.length < 2;

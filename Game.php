@@ -1,7 +1,6 @@
 <?php
 require_once 'Player.php';
 require_once 'Deck.php';
-require_once 'db_connection.php';
 require_once 'DatabaseConnection.php';
 
 /**
