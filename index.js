@@ -71,6 +71,9 @@
          * Draw button event handler. Calls the play card server function.
          */
         function onDrawClick(){
+            // Check players turn.
+
+            // if (game.playerIndex === currentPlayer.)
             $.post(fncUrl,
                 {
                     action: 'playCard',
@@ -99,7 +102,18 @@
                     action: 'slapCard',
                     gameId: game.gameId,
                     playerId: currentPlayer.playerId
-                });
+                },
+                function (response){
+                    if (isJsonString(response)){
+                        console.log(JSON.parse(response));
+                    }
+                    else {
+                        $('#error-section').css('display', 'block');
+                        // if it's a string, put it in error message section.
+                        $('#error-section').html(response);
+                    }
+                }
+                );
         }
 
         /**

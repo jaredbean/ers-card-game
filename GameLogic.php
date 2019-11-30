@@ -61,10 +61,6 @@ function playCard($gameId, $playerId){
     $game->playCard($playerId);
 
     $game->writeGameToDB();
-
-    // $gameJson = $game->readGameFromDB('json');
-    
-    // return $gameJson;
 }
 
 function slapCard($gameId, $playerId){
@@ -74,5 +70,7 @@ function slapCard($gameId, $playerId){
 
     $game = $game->readGameFromDB();
 
-    $game->slapCard($playerId);
+    $game->playerSlapEvent($playerId);
+    
+    $game->writeGameToDB();
 }
