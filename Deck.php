@@ -78,6 +78,9 @@ class Deck implements JsonSerializable
         return $gameDeck;
     }
 
+    /***
+     * Shuffles the existing deck in random order.
+     */
     public function shuffleDeck()
     {
         for ($i = 0; $i < $this->size; $i++)
@@ -116,6 +119,7 @@ class Deck implements JsonSerializable
         }
     }
 
+    // TODO: Handle running out of cards; win condition.
     /**
      * A function that removes cards from the top of the deck and returns them.
      * @param int $numCards: The number of cards to be removed from the top.
@@ -126,6 +130,7 @@ class Deck implements JsonSerializable
         if ($this->size >= $numCards)
         {
             $cardArray = array();
+            // TODO: Remove these lines?
             //$counter = $numCards;
             //while ($counter > 0)
             while ($numCards > 0)
@@ -135,7 +140,6 @@ class Deck implements JsonSerializable
                 $numCards--;
                 $this->size--;
             }
-            //$this->size -= $numCards;
             return $cardArray;
         }
         else
@@ -144,8 +148,9 @@ class Deck implements JsonSerializable
         }
     }
 
+    // TODO: Handle running out of cards; win condition.
     /**
-     * A function that removes cards from the bottom of the deck.
+     * A function that removes cards from the bottom of the deck and returns them.
      * @param int $numCards: The number of cards to remove from the deck.
      * @return array: An array of Card objects that were removed from the deck.
      */
@@ -154,6 +159,7 @@ class Deck implements JsonSerializable
         if ($this->size >= $numCards)
         {
             $cardArray = array();
+            // TODO: Remove these lines?
             //$counter = $numCards;
             //while ($counter > 0)
             while ($numCards > 0)
@@ -163,15 +169,12 @@ class Deck implements JsonSerializable
                 $numCards--;
                 $this->size--;
             }
-            //$this->size -= $numCards;
             return $cardArray;
         }
         else
         {
             echo "Error: Not enough cards.";
         }
-
-        // TODO: Update size of deck
     }
 
     /**
