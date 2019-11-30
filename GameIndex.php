@@ -8,28 +8,55 @@ $game->addPlayer("Joe Dirt", "1");
 $game->addPlayer("Leroy Jenkins", "2");
 $game->start();
 
-echo '<h2>Displaying top 5 cards for each deck.</h2>';
-$game->displayDecks();
-for ($i = 0; $i < 26; $i++) {
-    $game->playCard(1);
-    $game->playCard(2);
-}
-echo '<h2>Player 1 and player 2 each played 26 hands</h2>';
-$game->displayDecks();
-$game->writeGameToDB();
+//echo '<h2>Displaying top 5 cards for each deck.</h2>';
+//$game->displayDecks();
+//$game->playCard(1);
+//echo '<h2>Displaying top 5 cards for each deck.</h2>';
+//$game->displayDecks();
+//$game->playCard(2);
+//echo '<h2>Displaying top 5 cards for each deck.</h2>';
+//$game->displayDecks();
 
-echo "<h2>Original PHP Game Object</h2>";
-var_dump($game);
-//echo "<h2>json_decode from DB</h2>";
-//var_dump($game->readGameFromDB());
-echo "<h2>unserialize() from DB</h2>";
-$gameFromDB = $game->readGameFromDB();
-var_dump($gameFromDB);
-echo '<h2>Test DB Game object unserialized: isPlaying = ' . $gameFromDB->getIsPlaying() . '</h2>';
-//$serializedGame = serialize($game);
-//var_dump(unserialize($serializedGame));
-echo '<h2>Get DB Game object as json</h2>';
-echo $gameFromDB->readGameFromDB('json');
+for ($i = 0; $i < 70; $i++)
+{
+    echo "<h2>Round $i: Displaying top 5 cards for each deck.</h2>";
+    $game->displayDecks();
+
+    $playerIndex = $game->getPlayerIndex();
+    if ($playerIndex == 0)
+    {
+        $game->playCard(1);
+        $topCardArr = json_decode($game->showTopCards($game->gameDeck, 1));
+        $topCard = $topCardArr[0]->value;
+        echo "<h3>Player 1 played a $topCard</h3>";
+    }
+    else
+    {
+        $game->playCard(2);
+        $topCardArr = json_decode($game->showTopCards($game->gameDeck, 1));
+        $topCard = $topCardArr[0]->value;
+        echo "<h3>Player 2 played a $topCard</h3>";
+    }
+}
+//echo '<h2>Player 1 and player 2 each played 26 hands</h2>';
+//$game->displayDecks();
+//$game->writeGameToDB();
+//
+//echo "<h2>Original PHP Game Object</h2>";
+//var_dump($game);
+////echo "<h2>json_decode from DB</h2>";
+////var_dump($game->readGameFromDB());
+//echo "<h2>unserialize() from DB</h2>";
+//$gameFromDB = $game->readGameFromDB();
+//var_dump($gameFromDB);
+//echo '<h2>Test DB Game object unserialized: isPlaying = ' . $gameFromDB->getIsPlaying() . '</h2>';
+////$serializedGame = serialize($game);
+////var_dump(unserialize($serializedGame));
+//echo '<h2>Get DB Game object as json</h2>';
+//echo $gameFromDB->readGameFromDB('json');
+
+
+
 
 //echo $gameFromDB->Game->isPlaying;
 

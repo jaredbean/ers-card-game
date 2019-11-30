@@ -32,13 +32,21 @@ class Game implements JsonSerializable
      * An index to the $players array indicating the turn of the current player.
      */
     private $playerIndex = -1;
+    /***
+     * A variable storing if a face card has been played.
+     */
+    private $isFaceCardPlayed = false;
+    /***
+     * Holds the number of required consecutive plays a player must perform to account for face cards.
+     */
+    private $requiredPlays = -1;
 
     /**
      * Game constructor.
      */
     public function __construct()
     {
-        $this->discardDeck = new Deck();
+        //$this->discardDeck = new Deck();
         $this->gameDeck = new Deck();
         $this->players = array();
         $this->gameDeck->generateGameDeck();
@@ -59,13 +67,14 @@ class Game implements JsonSerializable
      */
     public function start(): void
     {
-        $this->dealCards();
         $this->isPlaying = true;
-        $this->updatePlayerTurn();
+        $this->dealCards();
+        $this->updatePlayerIndex();
+        $this->gameDeck->setIsClickable(true);
     }
 
     /**
-     * Deals the cards from the main deck to the player's decks.
+     * Deals the cards from the main deck to the player's decks when starting a new game.
      */
     public function dealCards(): void
     {
@@ -73,7 +82,7 @@ class Game implements JsonSerializable
 
         while ($counter > 0)
         {
-            $this->updatePlayerTurn();
+            $this->updatePlayerIndex();
             $playerDeck = $this->players[$this->playerIndex]->getPlayerDeck();
             $this->moveCardsToDeck($this->gameDeck, $playerDeck, 1);
             $counter--;
@@ -100,10 +109,18 @@ class Game implements JsonSerializable
         }
     }
 
+    /***
+     * A function that allows the player to play one card from their deck to the game deck.
+     * @param int $playerID
+     */
     public function playCard(int $playerID)
     {
         $player = $this->players[$this->getIndexOfPlayerID($playerID)];
         $this->moveCardsToDeck($player->getPlayerDeck(), $this->gameDeck, 1);
+//        if ($this->isFaceCardPlayed = true && $this->requiredPlays > 0)
+//        {
+//            $this->requiredPlays--;
+//        }
         $this->updatePlayerTurn();
     }
 
@@ -128,25 +145,87 @@ class Game implements JsonSerializable
      */
     public function updatePlayerTurn(): void
     {
-        // TODO: Current players deck becomes unclickable, next players deck becomes clickable. Check for index val -1.
-        // TODO: After first players turn, gamedeck become clickable.
-        // TODO: Handle player's turns when a face card is played.
         // TODO: Handle if a face card is played, all required cards are played (1-4), and no slap
 
+        // Face card is played
+        // Using json_decode because I coded showTopCards to return a string and didn't want to write new func
+        $topCard = json_decode($this->showTopCards($this->gameDeck, 1));
+        //var_dump($topCard[0]->value);
+
+        switch ($topCard[0]->value)
+        {
+            case 'J':
+                $this->requiredPlays = 0;
+                $this->isFaceCardPlayed = true;
+                $this->updatePlayerIndex();
+                echo '<h3>JACK PLAYED!</h3>';
+                break;
+            case 'Q':
+                $this->requiredPlays = 1;
+                $this->isFaceCardPlayed = true;
+                $this->updatePlayerIndex();
+                echo '<h3>QUEEN PLAYED!</h3>';
+                break;
+            case 'K':
+                $this->requiredPlays = 2;
+                $this->isFaceCardPlayed = true;
+                $this->updatePlayerIndex();
+                echo '<h3>KING PLAYED!</h3>';
+                break;
+            case 'A':
+                $this->requiredPlays = 3;
+                $this->isFaceCardPlayed = true;
+                $this->updatePlayerIndex();
+                echo '<h3>ACE PLAYED!</h3>';
+                break;
+            default:
+                // A face card was played by previous player && curr player is still required to play more
+                if ($this->isFaceCardPlayed && $this->requiredPlays > 0)
+                {
+                    $this->requiredPlays--;
+                }
+                // A face card was played by previous player && curr player has played the required amount
+                else if ($this->isFaceCardPlayed && $this->requiredPlays == 0)
+                {
+                    // TODO: Previous player wins and gets cards.
+
+
+                    $this->isFaceCardPlayed = false;
+                    $this->requiredPlays = -1;
+                    $this->updatePlayerIndex();
+                    $winPlayer = $this->playerIndex == 0 ? '1' : '2';
+                    echo "<h3>Player $winPlayer wins the game deck!</h3>";
+                }
+                // A face card has not been played. Default play.
+                else if ($this->isFaceCardPlayed == false && $this->requiredPlays == -1) // this should be default but adding the check for debugging
+                {
+                    $this->updatePlayerIndex();
+                }
+                // Something went wrong
+                else
+                {
+                    echo '<h1>ERROR: Unknown case in Game->updatePlayerTurn().</h1>';
+                }
+        }
+    }
+
+    public function updatePlayerIndex()
+    {
         if ($this->playerIndex === -1)
         {
             $this->playerIndex++;
         }
-        else
-        {
-            // Set previous player's deck to unclickable
-            $this->players[$this->playerIndex]->getPlayerDeck()->setIsClickable(False);
-            // Change index of players turn
-            ($this->playerIndex == sizeof($this->players) - 1) ? $this->playerIndex = 0 : $this->playerIndex++;
-            // Set new player's deck to clickable
-            $this->players[$this->playerIndex]->getPlayerDeck()->setIsClickable(True);
-        }
+        else {
+            $lastPlayersDeck = $this->players[$this->playerIndex]->getPlayerDeck();
+            $lastPlayersDeck->setIsClickable(False);
 
+            // Change index of players turn, wrapping from the last index.
+            $lastIndex = sizeof($this->players) - 1;
+            ($this->playerIndex === $lastIndex) ? $this->playerIndex = 0 : $this->playerIndex++;
+
+            $currPlayersDeck = $this->players[$this->playerIndex]->getPlayerDeck();
+            $currPlayersDeck->setIsClickable(True);
+        }
     }
 
     public function playerSlapEvent($playerID)
@@ -201,8 +280,8 @@ class Game implements JsonSerializable
     /***
      * Returns a PHP Game object using unserialize() if no arguments are passed in, or returns a
      * json string if the argument 'json' is passed in.
-     * @param string|null $arg
-     * @return mixed
+     * @param string|null $arg: null (default) returns a php object; 'json' returns a json string.
+     * @return mixed: A php Game object, or a json string of a Game object.
      */
     // TODO: Make static function, pass in GameID
     public function readGameFromDB(string $arg = null)
@@ -225,19 +304,30 @@ class Game implements JsonSerializable
         }
     }
 
+    /***
+     * For backend debugging. Displays the top 5 cards of each deck.
+     */
     public function displayDecks()
     {
-        echo "<h2>Game Deck</h2>";
-        echo $this->showTopCards($this->gameDeck, 5);
-        echo "<p>Size: " . $this->gameDeck->getSize() . "</p>";
+        $topCards = $this->showTopCards($this->gameDeck, 5);
+        $deckSize = $this->gameDeck->getSize();
+        echo "<p>Game Deck [size: $deckSize] $topCards</p>";
 
-        echo "<h2>Player 1 Deck</h2>";
-        echo $this->showTopCards($this->players[0]->getPlayerDeck(), 5);
+        $topCards = $this->showTopCards($this->players[0]->getPlayerDeck(), 5);
+        $deckSize = $this->players[0]->getPlayerDeck()->getSize();
+        echo "<p>Player 1 Deck [size: $deckSize] $topCards</p>";
 
-        echo "<h2>Player 2 Deck</h2>";
-        echo $this->showTopCards($this->players[1]->getPlayerDeck(), 5);
+        $topCards = $this->showTopCards($this->players[1]->getPlayerDeck(), 5);
+        $deckSize = $this->players[1]->getPlayerDeck()->getSize();
+        echo "<p>Player 2 Deck [size: $deckSize] $topCards</p>";
     }
 
+    /***
+     * For backend debugging. Show the top cards of a deck.
+     * @param Deck $deck: The deck to use for showing the top cards.
+     * @param int $numCards: The number of cards to show from the top of the deck.
+     * @return string: A json string.
+     */
     public function showTopCards(Deck $deck, int $numCards): string
     {
         $showCards = array();
