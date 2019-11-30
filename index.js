@@ -2,6 +2,7 @@
     $(function(){
         var fncUrl = 'AjaxRequestHandlers.php';
         var game = {};
+        var currentDiscardPile = [];
         var gameId = false;
         var currentPlayer = {};
         var opponent = false;
@@ -160,9 +161,8 @@
                         checkPlayerCount();
                         // Show/Hides sections of the game.
                         if (game.isPlaying){
-                            console.log(game);
                             // Shows top five cards in the discard pile.
-                            // updateDiscardPile();
+                            updateDiscardPile();
                         }
                         
                     }
@@ -214,23 +214,35 @@
          * on the game object.
          */
         function updateDiscardPile(){
-            // Clear the elements in discard pile.
-            $('#discard-pile').empty();
-
-            var startIdx = game.gameDeck.cards.length-6;
-
-            // Check if discard pile length is less than 5.
-            if (startIdx < 0){
-                startIdx = 0;
+            if (game.gameDeck.cards.length > 0){
+                var startIdx = game.gameDeck.cards.length-5;
+    
+                // Check if discard pile length is less than 5.
+                if (startIdx < 0){
+                    startIdx = 0;
+                }
+                var topFiveCards = game.gameDeck.cards.slice(startIdx, game.gameDeck.cards.length);
+                if (!topFiveCards.every(function (c, idx){ return currentDiscardPile[idx] && cardEquals(c, currentDiscardPile[idx]); })){
+                    
+                    // Clear the elements in discard pile.
+                    $('#discard-pile').empty();
+                    topFiveCards.forEach(function (card){
+                        var $element = $(document.createElement('div'));
+                        $element.addClass('discarded card ' + card.suit + '_' + card.value);
+        
+                        $('#discard-pile').append($element);
+                        currentDiscardPile.push(card)
+                    });
+                }
             }
-            var topFiveCards = game.gameDeck.cards.slice(startIdx, game.gameDeck.cards.length);
+            else if (currentDiscardPile.length !== 0) {
+                // Clear the elements in discard pile.
+                $('#discard-pile').empty();
+                var $newElement = $(document.createElement('div'));
 
-            topFiveCards.forEach(function (card){
-                var element = $('div');
-                element.addClass('card ' + card.suit + '_' + card.value);
-
-                $('#discard-pile').append(element);
-            });
+                $newElement.addClass('card empty');
+                $('#discard-pile').append($newElement);
+            }
         }
 
         /**
@@ -245,6 +257,11 @@
                 return false;
             }
             return true;
+        }
+
+        function cardEquals(card1, card2){
+            return card1.suit === card2.suit &&
+                    card1.value === card2.value;
         }
     })
 })()
