@@ -21,10 +21,6 @@ class Game implements JsonSerializable
      */
     public $gameDeck = null;
     /**
-     * A deck object that represents the discard deck of the game where players place their cards and can slap.
-     */
-    //public $discardDeck = null;
-    /**
      * A bool that determines if the game is in the plays state.
      */
     public $isPlaying = false;
@@ -109,19 +105,39 @@ class Game implements JsonSerializable
         }
     }
 
+    public function moveWonCards (int $playerIndex)
+    {
+        $gameDeck = $this->getGameDeck();
+        $gameDeckSize = $gameDeck->getSize();
+        $playerDeck = $this->players[$playerIndex]->getPlayerDeck();
+
+        $playerDeck->addCardsToBottom($gameDeck->removeCardsFromBottom($gameDeckSize));
+    }
+
     /***
      * A function that allows the player to play one card from their deck to the game deck.
      * @param int $playerID
      */
     public function playCard(int $playerID)
     {
-        $player = $this->players[$this->getIndexOfPlayerID($playerID)];
-        $this->moveCardsToDeck($player->getPlayerDeck(), $this->gameDeck, 1);
-//        if ($this->isFaceCardPlayed = true && $this->requiredPlays > 0)
+        // TODO: Add the if check when finished with player constructor
+//        if ($playerID === $this->playerIndex)
 //        {
-//            $this->requiredPlays--;
+            $player = $this->players[$this->getIndexOfPlayerID($playerID)];
+            $this->moveCardsToDeck($player->getPlayerDeck(), $this->gameDeck, 1);
+
+            // **DEBUGGING**
+    //            $p = $player->getPlayerId();
+    //            $c = json_decode($this->showTopCards($this->gameDeck, 1));
+    //            echo "<h3>Player $p played a " . $c[0]->value . "</h3>";
+
+            if ($this->isFaceCardPlayed && $this->requiredPlays > 0)
+            {
+                $this->requiredPlays--;
+            }
+
+            $this->updatePlayerTurn();
 //        }
-        $this->updatePlayerTurn();
     }
 
     public function getIndexOfPlayerID(int $playerID)
@@ -155,46 +171,47 @@ class Game implements JsonSerializable
         switch ($topCard[0]->value)
         {
             case 'J':
-                $this->requiredPlays = 0;
-                $this->isFaceCardPlayed = true;
-                $this->updatePlayerIndex();
-                echo '<h3>JACK PLAYED!</h3>';
-                break;
-            case 'Q':
                 $this->requiredPlays = 1;
                 $this->isFaceCardPlayed = true;
                 $this->updatePlayerIndex();
-                echo '<h3>QUEEN PLAYED!</h3>';
+                //echo '<h3>JACK PLAYED!</h3>';
                 break;
-            case 'K':
+            case 'Q':
                 $this->requiredPlays = 2;
                 $this->isFaceCardPlayed = true;
                 $this->updatePlayerIndex();
-                echo '<h3>KING PLAYED!</h3>';
+                //echo '<h3>QUEEN PLAYED!</h3>';
                 break;
-            case 'A':
+            case 'K':
                 $this->requiredPlays = 3;
                 $this->isFaceCardPlayed = true;
                 $this->updatePlayerIndex();
-                echo '<h3>ACE PLAYED!</h3>';
+                //echo '<h3>KING PLAYED!</h3>';
+                break;
+            case 'A':
+                $this->requiredPlays = 4;
+                $this->isFaceCardPlayed = true;
+                $this->updatePlayerIndex();
+                //echo '<h3>ACE PLAYED!</h3>';
                 break;
             default:
                 // A face card was played by previous player && curr player is still required to play more
                 if ($this->isFaceCardPlayed && $this->requiredPlays > 0)
                 {
-                    $this->requiredPlays--;
+                    return;
                 }
                 // A face card was played by previous player && curr player has played the required amount
                 else if ($this->isFaceCardPlayed && $this->requiredPlays == 0)
                 {
-                    // TODO: Previous player wins and gets cards.
-
-
+                    // TODO: Move gamedeck to winning players deck.
+                    $this->moveWonCards($this->getPreviousPlayer());
                     $this->isFaceCardPlayed = false;
                     $this->requiredPlays = -1;
                     $this->updatePlayerIndex();
+
+                    // For debugging
                     $winPlayer = $this->playerIndex == 0 ? '1' : '2';
-                    echo "<h3>Player $winPlayer wins the game deck!</h3>";
+                    //echo "<h1>Player $winPlayer wins the game deck!</h1>";
                 }
                 // A face card has not been played. Default play.
                 else if ($this->isFaceCardPlayed == false && $this->requiredPlays == -1) // this should be default but adding the check for debugging
@@ -205,6 +222,11 @@ class Game implements JsonSerializable
                 else
                 {
                     echo '<h1>ERROR: Unknown case in Game->updatePlayerTurn().</h1>';
+                    $i = $this->playerIndex;
+                    $fc = $this->isFaceCardPlayed;
+                    $r = $this->requiredPlays;
+                    var_dump($fc);
+                    echo "Player Index: $i, FaceCardPlayed = $fc, requiredPlays = $r";
                 }
         }
     }
@@ -225,6 +247,22 @@ class Game implements JsonSerializable
 
             $currPlayersDeck = $this->players[$this->playerIndex]->getPlayerDeck();
             $currPlayersDeck->setIsClickable(True);
+        }
+    }
+
+    /***
+     * Returns the index of the previous player.
+     * @return int
+     */
+    public function getPreviousPlayer(): int
+    {
+        if ($this->playerIndex === 0)
+        {
+            return sizeof($this->players) - 1;
+        }
+        else
+        {
+            return $this->playerIndex - 1;
         }
     }
 
@@ -375,22 +413,6 @@ class Game implements JsonSerializable
     public function setGameDeck($gameDeck): void
     {
         $this->gameDeck = $gameDeck;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDiscardDeck()
-    {
-        return $this->discardDeck;
-    }
-
-    /**
-     * @param mixed $discardDeck
-     */
-    public function setDiscardDeck($discardDeck): void
-    {
-        $this->discardDeck = $discardDeck;
     }
 
     /**

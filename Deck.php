@@ -111,7 +111,7 @@ class Deck implements JsonSerializable
         foreach ($cards as $card)
         {
             // TODO: Check if this is how to do it!
-            array_shift($this->cards, $card);
+            array_unshift($this->cards, $card);
             $this->size++;
         }
     }
@@ -146,11 +146,30 @@ class Deck implements JsonSerializable
 
     /**
      * A function that removes cards from the bottom of the deck.
-     * @param int $num: The number of cards to remove from the deck.
+     * @param int $numCards: The number of cards to remove from the deck.
      * @return array: An array of Card objects that were removed from the deck.
      */
-    public function removeCardsFromBottom(int $num): array
+    public function removeCardsFromBottom(int $numCards): array
     {
+        if ($this->size >= $numCards)
+        {
+            $cardArray = array();
+            //$counter = $numCards;
+            //while ($counter > 0)
+            while ($numCards > 0)
+            {
+                $cardArray[] = array_shift($this->cards);
+                //$counter--;
+                $numCards--;
+                $this->size--;
+            }
+            //$this->size -= $numCards;
+            return $cardArray;
+        }
+        else
+        {
+            echo "Error: Not enough cards.";
+        }
 
         // TODO: Update size of deck
     }

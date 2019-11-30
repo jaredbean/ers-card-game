@@ -7,10 +7,15 @@
 class DatabaseConnection
 {
     private static $instance = null;
-    private static $host = "sql201.epizy.com";
-    private static $dbname = "epiz_24388369_cs3750_names";
-    private static $user = "epiz_24388369";
-    private static $pass = "weberstudent1";
+//    private static $host = "sql201.epizy.com";
+//    private static $dbname = "epiz_24388369_cs3750_names";
+//    private static $user = "epiz_24388369";
+//    private static $pass = "weberstudent1";
+
+    private static $host = "icarus.cs.weber.edu";
+    private static $dbname = "W01085178";
+    private static $user = "W01085178";
+    private static $pass = "Jaredcs!";
 
     private function __construct()
     {
