@@ -41,9 +41,29 @@ class Game implements JsonSerializable
      */
     private $isPlayerOutOfCards = false;
     /***
-     *
+     * The playerId of the player with no cards.
      */
-    private $playerIDOfNoCards = -1;
+    private $playerIdOfNoCards = -1;
+    /***
+     * Boolean indicating if the round is won.
+     */
+    private $isRoundWon = false;
+    /***
+     * Boolean indicating if the player's name of a winning round should be displayed.
+     */
+    private $isDisplayRoundWinner;
+    /***
+     * Username of the round winner.
+     */
+    private $nameOfRoundWinner = null;
+    /***
+     * Boolean that indicates if the game is over.
+     */
+    private $isGameOver = false;
+    /***
+     * The name of the player that won the game.
+     */
+    private $gameWinnerName = null;
 
 
     /**
@@ -116,6 +136,114 @@ class Game implements JsonSerializable
     }
 
     /***
+     * A function that allows the player to play one card from their deck to the game deck.
+     * @param int $playerID
+     */
+    public function playCard(int $playerID)
+    {
+        // TODO: Check for win condition (e.g. Player has no more cards. Check rules in Canvas.)
+        if ($playerID != $this->playerIndex)
+        {
+            return;
+        }
+
+        if ($this->isRoundWon)
+        {
+            // TODO: Make work with more than 2 players
+            // PlayerIndex was updated, so need to get playerIndex from 2 plays ago.
+            $this->moveWonCards($this->playerIndex);
+            $this->isRoundWon = false;
+            $this->isDisplayRoundWinner = false;
+            return;
+        }
+
+        // TODO: Edit the if check when finished updating player constructor
+//        if ($playerID === $this->playerIndex)
+//        {
+
+            $player = $this->players[$this->getIndexOfPlayerID($playerID)];
+            $this->moveCardsToDeck($player->getPlayerDeck(), $this->gameDeck, 1);
+
+            // FOR DEBUGGING
+//            $p = $player->getPlayerId();
+//            $c = json_decode($this->showTopCards($this->gameDeck, 1));
+//            echo "<h3>Player $p played a " . $c[0]->value . "</h3>";
+//          //============================================================
+
+            if ($this->isFaceCardPlayed && $this->requiredPlays > 0)
+            {
+                $this->requiredPlays--;
+            }
+
+            // TODO: THE BUG WAS HERE FOR WIN CONDITION! WHY WASN'T THIS SURROUNDED BY CONDITION STATEMENT???
+            // Check if player is out of cards.
+//            $sizeOfPlayerDeck = $this->players[$this->getIndexOfPlayerID($playerID)]->getPlayerDeck()->getSize();
+//            $this->isPlayerOutOfCards = $sizeOfPlayerDeck < 1 ? true : false;
+//            $this->playerIDOfNoCards = $this->getIndexOfPlayerID($playerID);
+//            $this->requiredPlays = -1;
+//            $this->isFaceCardPlayed = false;
+
+            $this->updatePlayerTurn($playerID);
+
+//        }
+    }
+
+    /***
+     * Handles the event when a player has slapped the game deck. If the slap is valid, the game deck is moved to
+     * the bottom of the winning player's deck and the winning player starts the next round. If the slap is invalid,
+     * the player removes two cards from the bottom of his deck and places it on the bottom of the game deck; player's
+     * turn resumes as normal.
+     * @param $playerID
+     */
+    public function playerSlapEvent($playerID)
+    {
+        // TODO: Check logic if there is a slap on last cards of a round.
+        // TODO: Add/update logic to include displaying the winner of a successful slap.
+
+        if ($this->gameDeck->getSize() < 2)
+        {
+            return;
+        }
+
+        $firstCard = $this->gameDeck->getCards()[$this->gameDeck->getSize() - 1];
+        $secondCard = $this->gameDeck->getCards()[$this->gameDeck->getSize() - 2];
+
+        // Slap is valid
+        if ($firstCard->value === $secondCard->value)
+        {
+            // For Debugging
+            echo '<h2>Valid Slap!</h2>';
+            //===========================
+
+            $this->moveWonCards($playerID);
+
+            if ($playerID === $this->playerIdOfNoCards)
+            {
+                $this->isPlayerOutOfCards = false;
+            }
+
+            $this->isFaceCardPlayed = false;
+            $this->requiredPlays = -1;
+            // If a player wins the round, but the last 2 cards were slapped, the player does not win the round.
+            $this->isRoundWon = false;
+            // TODO: Update this to represent both the round winner and the slap winner.
+            // This currently only displays the round winner, no the slap winner.
+            $this->isDisplayRoundWinner = false;
+
+            // TODO: Make this more robust to handle more than 2 players
+            $this->updateToWinPlayerIndex($playerID);
+        }
+        // Slap is invalid
+        else
+        {
+            // For debugging
+            echo '<h2>NOT Valid Slap!</h2>';
+            //==================================
+            $this->moveLostCards($playerID);
+        }
+    }
+
+    /***
      * When a player wins the round, the game deck is added to the bottom of the winning player's deck. The game deck
      * is flipped over and added to the bottom of the winning player's deck. The last played card added to the game
      * deck becomes the very bottom card of the winning player's deck.
@@ -143,65 +271,11 @@ class Game implements JsonSerializable
         $gameDeck->addCardsToBottom(array_reverse($playerDeck->removeCardsFromBottom(2)));
     }
 
-    /***
-     * A function that allows the player to play one card from their deck to the game deck.
-     * @param int $playerID
-     */
-    public function playCard(int $playerID)
-    {
-        // TODO: Check for win condition (e.g. Player has no more cards. Check rules in Canvas.)
-
-
-        // TODO: Edit the if check when finished updating player constructor
-        if ($playerID === $this->playerIndex)
-        {
-            $player = $this->players[$this->getIndexOfPlayerID($playerID)];
-            $this->moveCardsToDeck($player->getPlayerDeck(), $this->gameDeck, 1);
-
-            // FOR DEBUGGING
-//            $p = $player->getPlayerId();
-//            $c = json_decode($this->showTopCards($this->gameDeck, 1));
-//            echo "<h3>Player $p played a " . $c[0]->value . "</h3>";
-
-            if ($this->isFaceCardPlayed && $this->requiredPlays > 0)
-            {
-                $this->requiredPlays--;
-            }
-
-            // Check if player is out of cards.
-            $sizeOfPlayerDeck = $this->players[$this->getIndexOfPlayerID($playerID)]->getPlayerDeck()->getSize();
-            $this->isPlayerOutOfCards = $sizeOfPlayerDeck < 1 ? true : false;
-
-            $this->updatePlayerTurn($playerID);
-        }
-    }
-
-    // TODO: Shouldn't need this if we update Player constructor to auto-assign the PlayerId as the Player's Index.
-    /***
-     * Given a playerID, search through the players array and return the index of the player with
-     * a matching playerID.
-     * @param int $playerID
-     * @return int
-     */
-    public function getIndexOfPlayerID(int $playerID)
-    {
-        $index = 0;
-        while ($index < sizeof($this->players))
-        {
-            if ($this->players[$index]->getPlayerId() === $playerID)
-            {
-                return $index;
-            }
-            else
-            {
-                $index++;
-            }
-        }
-    }
-
     /**
      * A function that determines the current player's turn, taking into account face-cards that have been played.
      */
+    // TODO: Remove playerID parameter?
+//    public function updatePlayerTurn(int $playerID): void
     public function updatePlayerTurn(int $playerID): void
     {
         // Face card is played
@@ -244,23 +318,34 @@ class Game implements JsonSerializable
                 // A face card was played by previous player && curr player is still required to play more
                 if ($this->isFaceCardPlayed && $this->requiredPlays > 0)
                 {
-                    if ($this->isPlayerOutOfCards)
-                    {
-                        $this->updatePlayerIndex();
-                    }
-                    else
-                    {
+                      // TODO: Game win condition.
+//                    if ($this->isPlayerOutOfCards === true)
+//                    {
+//                        $this->updatePlayerIndex();
+//                    }
+//                    else
+//                    {
                         return;
-                    }
+//                    }
                 }
                 // A face card was played by previous player && curr player has played the required amount
                 else if ($this->isFaceCardPlayed && $this->requiredPlays == 0)
                 {
-                    $this->moveWonCards($this->getPreviousPlayer());
                     $this->isFaceCardPlayed = false;
                     $this->requiredPlays = -1;
-                    $this->isPlayerOutOfCards = false;
+                    $this->isRoundWon = true;
+                    $this->nameOfRoundWinner = $this->players[$this->getPreviousPlayerIndex()]->getUsername();
+                    $this->isDisplayRoundWinner = true;
                     $this->updatePlayerIndex();
+
+                    //echo '<h2>If no slaps, ' . $this->player[$this->playerIndex]->getUsername() . ' won the round!</h2>';
+//                    $this->moveWonCards($this->getPreviousPlayer());
+//                    $this->isFaceCardPlayed = false;
+//                    $this->requiredPlays = -1;
+//
+////                    $this->isPlayerOutOfCards = false;
+//
+//                    $this->updatePlayerIndex();
 
                     // FOR DEBUGGING
                     //$winPlayer = $this->playerIndex == 0 ? '1' : '2';
@@ -293,35 +378,94 @@ class Game implements JsonSerializable
      */
     public function updatePlayerIndex()
     {
+        $nextPlayerID = $this->players[$this->getNextPlayerIndex()]->getPlayerId();
         if ($this->playerIndex === -1)
         {
             $this->playerIndex++;
+        }
+        else if ($this->isPlayerOutOfCards == true && $this->playerIdOfNoCards == $nextPlayerID)
+        {
+            $this->gameIsOver();
         }
         else
         {
             $lastPlayersDeck = $this->players[$this->playerIndex]->getPlayerDeck();
             $lastPlayersDeck->setIsClickable(False);
 
+            // TODO: Double check commented code below can be removed.
             // Change index of players turn, wrapping from the last index.
-            $lastIndex = sizeof($this->players) - 1;
-            $nextPlayersIndex = ($this->playerIndex === $lastIndex) ? 0 : $this->playerIndex + 1;
+//            $lastIndex = sizeof($this->players) - 1;
+//            $nextPlayersIndex = ($this->playerIndex === $lastIndex) ? 0 : $this->playerIndex + 1;
             //($this->playerIndex === $lastIndex) ? $this->playerIndex = 0 : $this->playerIndex++;
+//            $nextPlayersIndex = $this->getNextPlayerIndex();
+//            $playerNoCardsIndex = $this->getIndexOfPlayerID($this->playerIDOfNoCards);
+//
+//            if ($nextPlayersIndex === $playerNoCardsIndex)
+//            {
+//                $this->gameIsOver();
+//            }
+//            else
+//            {
+//                $this->playerIndex = $nextPlayersIndex;
+//            }
 
-            if ($nextPlayersIndex == $this->playerIDOfNoCards)
-            {
-                echo '<h1>END OF GAME, WINNER IS NAME = ' . $this->players[$this->playerIndex]->getUsername();
-            }
-            else
-            {
-                $this->playerIndex = $nextPlayersIndex;
-            }
+            $this->playerIndex = $this->getNextPlayerIndex();
+
             $currPlayersDeck = $this->players[$this->playerIndex]->getPlayerDeck();
             $currPlayersDeck->setIsClickable(True);
         }
     }
 
     /***
-     * After a player wins, updates current players turn to the winning player.
+     * // TODO: Wrote this multiple times in code, refactor using this function instead.
+     * @return int
+     */
+    public function getNextPlayerIndex(): int
+    {
+        return ($this->playerIndex === sizeof($this->players) - 1) ? 0 : $this->playerIndex + 1;
+    }
+
+    /***
+     * Returns the index of the previous player.
+     * @return int
+     */
+    public function getPreviousPlayerIndex(): int
+    {
+        if ($this->playerIndex === 0)
+        {
+            return sizeof($this->players) - 1;
+        }
+        else
+        {
+            return $this->playerIndex - 1;
+        }
+    }
+
+    // TODO: Shouldn't need this if we update Player constructor to auto-assign the PlayerId as the Player's Index.
+    /***
+     * Given a playerID, search through the players array and return the index of the player with
+     * a matching playerID.
+     * @param int $playerID
+     * @return int
+     */
+    public function getIndexOfPlayerID(int $playerID)
+    {
+        $index = 0;
+        while ($index < sizeof($this->players))
+        {
+            if ($this->players[$index]->getPlayerId() === $playerID)
+            {
+                return $index;
+            }
+            else
+            {
+                $index++;
+            }
+        }
+    }
+
+    /***
+     * After a player wins a round, updates current players turn to the winning player.
      * @param $playerID
      */
     public function updateToWinPlayerIndex($playerID)
@@ -337,63 +481,59 @@ class Game implements JsonSerializable
     }
 
     /***
-     * Returns the index of the previous player.
-     * @return int
+     * For backend debugging. Displays the top 5 cards of each deck.
      */
-    public function getPreviousPlayer(): int
+    public function displayDecks()
     {
-        if ($this->playerIndex === 0)
+        $topCards = $this->showTopCards($this->gameDeck, 5);
+        $deckSize = $this->gameDeck->getSize();
+        echo "<p>Game Deck [size: $deckSize] $topCards</p>";
+
+        $topCards = $this->showTopCards($this->players[0]->getPlayerDeck(), 5);
+        $deckSize = $this->players[0]->getPlayerDeck()->getSize();
+        echo "<p>Player 1 Deck [size: $deckSize] $topCards</p>";
+
+        $topCards = $this->showTopCards($this->players[1]->getPlayerDeck(), 5);
+        $deckSize = $this->players[1]->getPlayerDeck()->getSize();
+        echo "<p>Player 2 Deck [size: $deckSize] $topCards</p>";
+    }
+
+    // TODO: Refactor this now that we are using it in production code?
+    /***
+     * For backend debugging. Show the top cards of a deck.
+     * @param Deck $deck: The deck to use for showing the top cards.
+     * @param int $numCards: The number of cards to show from the top of the deck.
+     * @return string: A json string.
+     */
+    public function showTopCards(Deck $deck, int $numCards): string
+    {
+        $showCards = array();
+        $deckCards = $deck->getCards();
+        $index = sizeof($deckCards) - 1; // 'top' card
+        // Returns $numCards if deck is big enough, if not, returns max possible.
+        $maxCards = $index >= $numCards ? $numCards : $deck->getSize();
+
+        for ($i = 0; $i < $maxCards; $i++)
         {
-            return sizeof($this->players) - 1;
+            $showCards[] = $deckCards[$index];
+            $index--;
         }
-        else
-        {
-            return $this->playerIndex - 1;
-        }
+
+        return json_encode($showCards);
     }
 
     /***
-     * Handles the event when a player has slapped the game deck. If the slap is valid, the game deck is moved to
-     * the bottom of the winning player's deck and the winning player starts the next round. If the slap is invalid,
-     * the player removes two cards from the bottom of his deck and places it on the bottom of the game deck; player's
-     * turn resumes as normal.
-     * @param $playerID
+     * Logic to perform when the game is over.
      */
-    public function playerSlapEvent($playerID)
+    public function gameIsOver()
     {
-        if ($this->gameDeck->getSize() < 2)
+        $this->gameDeck->setIsClickable(false);
+        foreach ($this->players as $player)
         {
-            return;
+            $player->getPlayerDeck()->setIsClickable(false);
         }
-
-        $firstCard = $this->gameDeck->getCards()[$this->gameDeck->getSize() - 1];
-        $secondCard = $this->gameDeck->getCards()[$this->gameDeck->getSize() - 2];
-
-        // Slap is valid
-        if ($firstCard->value === $secondCard->value)
-        {
-            // TODO: Player adds game deck to bottom of his own deck. Think about adding cards in correct order.
-            echo '<h2>Valid Slap!</h2>';
-            $this->moveWonCards($playerID);
-
-            if ($playerID === $this->playerIDOfNoCards)
-            {
-                $this->isPlayerOutOfCards = false;
-            }
-
-            $this->isFaceCardPlayed = false;
-            $this->requiredPlays = -1;
-
-            // TODO: Make this more robust to handle more than 2 players
-            $this->updateToWinPlayerIndex($playerID);
-        }
-        // Slap is invalid
-        else
-        {
-            // TODO: Player discards two cards from the bottom of his deck to the bottom of the game deck.
-            echo '<h2>NOT Valid Slap!</h2>';
-            $this->moveLostCards($playerID);
-        }
+        $this->isGameOver = true;
+        $this->gameWinnerName = $this->players[$this->playerIndex]->getUsername();
     }
 
     /***
@@ -452,48 +592,6 @@ class Game implements JsonSerializable
 
             return $arg == null ? $gameObject : json_encode($gameObject);
         }
-    }
-
-    /***
-     * For backend debugging. Displays the top 5 cards of each deck.
-     */
-    public function displayDecks()
-    {
-        $topCards = $this->showTopCards($this->gameDeck, 5);
-        $deckSize = $this->gameDeck->getSize();
-        echo "<p>Game Deck [size: $deckSize] $topCards</p>";
-
-        $topCards = $this->showTopCards($this->players[0]->getPlayerDeck(), 5);
-        $deckSize = $this->players[0]->getPlayerDeck()->getSize();
-        echo "<p>Player 1 Deck [size: $deckSize] $topCards</p>";
-
-        $topCards = $this->showTopCards($this->players[1]->getPlayerDeck(), 5);
-        $deckSize = $this->players[1]->getPlayerDeck()->getSize();
-        echo "<p>Player 2 Deck [size: $deckSize] $topCards</p>";
-    }
-
-    // TODO: Refactor this now that we are using it in production code?
-    /***
-     * For backend debugging. Show the top cards of a deck.
-     * @param Deck $deck: The deck to use for showing the top cards.
-     * @param int $numCards: The number of cards to show from the top of the deck.
-     * @return string: A json string.
-     */
-    public function showTopCards(Deck $deck, int $numCards): string
-    {
-        $showCards = array();
-        $deckCards = $deck->getCards();
-        $index = sizeof($deckCards) - 1; // 'top' card
-        // Returns $numCards if deck is big enough, if not, returns max possible.
-        $maxCards = $index >= $numCards ? $numCards : $deck->getSize();
-
-        for ($i = 0; $i < $maxCards; $i++)
-        {
-            $showCards[] = $deckCards[$index];
-            $index--;
-        }
-
-        return json_encode($showCards);
     }
 
     /**
@@ -574,7 +672,16 @@ class Game implements JsonSerializable
             'players' => $this->players,
             'gameDeck' => $this->gameDeck,
             'isPlaying' => $this->isPlaying,
-            'playerIndex' => $this->playerIndex
+            'playerIndex' => $this->playerIndex,
+            'isFaceCardPlayed' => $this->isFaceCardPlayed,
+            'requiredPlays' => $this->requiredPlays,
+            'isPlayerOutOfCards' => $this->isPlayerOutOfCards,
+            'playerIdOfNoCards' => $this->playerIdOfNoCards,
+            'isRoundWon' => $this->isRoundWon,
+            'isDisplayRoundWinner' => $this->isDisplayRoundWinner,
+            'nameOfRoundWinner' => $this->nameOfRoundWinner,
+            'isGameOver' => $this->isGameOver,
+            'gameWinnerName' => $this->gameWinnerName
         ];
     }
 }
