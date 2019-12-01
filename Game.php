@@ -295,13 +295,14 @@ class Game implements JsonSerializable
      */
     public function updateToWinPlayerIndex($playerID)
     {
-        $lastPlayersDeck = $this->players[$this->playerIndex]->getPlayerDeck();
-        $lastPlayersDeck->setIsClickable(False);
+        $currentPlayersDeck = $this->players[$this->playerIndex]->getPlayerDeck();
+        $currentPlayersDeck->setIsClickable(False);
 
-        $this->playerIndex = $this->getPlayerIndex($playerID);
+        // Set playerIndex to winner's index.
+        $this->playerIndex = $this->getIndexOfPlayerID($playerID);
 
-        $currPlayersDeck = $this->players[$this->playerIndex]->getPlayerDeck();
-        $currPlayersDeck->setIsClickable(True);
+        $winnerPlayersDeck = $this->players[$this->playerIndex]->getPlayerDeck();
+        $winnerPlayersDeck->setIsClickable(True);
     }
 
     /***
@@ -320,7 +321,6 @@ class Game implements JsonSerializable
         }
     }
 
-    // TODO: Implement this function
     /***
      * Handles the event when a player has slapped the game deck. If the slap is valid, the game deck is moved to
      * the bottom of the winning player's deck and the winning player starts the next round. If the slap is invalid,
@@ -344,6 +344,7 @@ class Game implements JsonSerializable
             // TODO: Player adds game deck to bottom of his own deck. Think about adding cards in correct order.
             echo '<h2>Valid Slap!</h2>';
             $this->moveWonCards($playerID);
+            // TODO: Make this more robust to handle more than 2 players
             $this->updateToWinPlayerIndex($playerID);
         }
         // Slap is invalid
