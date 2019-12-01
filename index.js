@@ -161,6 +161,10 @@
                         checkPlayerCount();
                         // Show/Hides sections of the game.
                         if (game.isPlaying){
+                            // Look up the player whose turn it is.
+                            var turnPlayer = game.players[game.playerIndex];
+                            $('#player-turn-name').html(turnPlayer.userName);
+
                             // Shows top five cards in the discard pile.
                             updateDiscardPile();
                         }
