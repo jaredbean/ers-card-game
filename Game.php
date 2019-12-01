@@ -36,6 +36,15 @@ class Game implements JsonSerializable
      * Holds the number of required consecutive plays a player must perform to account for face cards.
      */
     private $requiredPlays = -1;
+    /***
+     * A boolean indicating if the previous player is out of cards.
+     */
+    private $isPlayerOutOfCards = false;
+    /***
+     *
+     */
+    private $playerIDOfNoCards = -1;
+
 
     /**
      * Game constructor.
@@ -159,7 +168,11 @@ class Game implements JsonSerializable
                 $this->requiredPlays--;
             }
 
-            $this->updatePlayerTurn();
+            // Check if player is out of cards.
+            $sizeOfPlayerDeck = $this->players[$this->getIndexOfPlayerID($playerID)]->getPlayerDeck()->getSize();
+            $this->isPlayerOutOfCards = $sizeOfPlayerDeck < 1 ? true : false;
+
+            $this->updatePlayerTurn($playerID);
         }
     }
 
@@ -189,7 +202,7 @@ class Game implements JsonSerializable
     /**
      * A function that determines the current player's turn, taking into account face-cards that have been played.
      */
-    public function updatePlayerTurn(): void
+    public function updatePlayerTurn(int $playerID): void
     {
         // Face card is played
         // TODO: Refactor showTopCards function?
@@ -231,7 +244,14 @@ class Game implements JsonSerializable
                 // A face card was played by previous player && curr player is still required to play more
                 if ($this->isFaceCardPlayed && $this->requiredPlays > 0)
                 {
-                    return;
+                    if ($this->isPlayerOutOfCards)
+                    {
+                        $this->updatePlayerIndex();
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
                 // A face card was played by previous player && curr player has played the required amount
                 else if ($this->isFaceCardPlayed && $this->requiredPlays == 0)
@@ -239,6 +259,7 @@ class Game implements JsonSerializable
                     $this->moveWonCards($this->getPreviousPlayer());
                     $this->isFaceCardPlayed = false;
                     $this->requiredPlays = -1;
+                    $this->isPlayerOutOfCards = false;
                     $this->updatePlayerIndex();
 
                     // FOR DEBUGGING
@@ -276,14 +297,24 @@ class Game implements JsonSerializable
         {
             $this->playerIndex++;
         }
-        else {
+        else
+        {
             $lastPlayersDeck = $this->players[$this->playerIndex]->getPlayerDeck();
             $lastPlayersDeck->setIsClickable(False);
 
             // Change index of players turn, wrapping from the last index.
             $lastIndex = sizeof($this->players) - 1;
-            ($this->playerIndex === $lastIndex) ? $this->playerIndex = 0 : $this->playerIndex++;
+            $nextPlayersIndex = ($this->playerIndex === $lastIndex) ? 0 : $this->playerIndex + 1;
+            //($this->playerIndex === $lastIndex) ? $this->playerIndex = 0 : $this->playerIndex++;
 
+            if ($nextPlayersIndex == $this->playerIDOfNoCards)
+            {
+                echo '<h1>END OF GAME, WINNER IS NAME = ' . $this->players[$this->playerIndex]->getUsername();
+            }
+            else
+            {
+                $this->playerIndex = $nextPlayersIndex;
+            }
             $currPlayersDeck = $this->players[$this->playerIndex]->getPlayerDeck();
             $currPlayersDeck->setIsClickable(True);
         }
@@ -344,6 +375,15 @@ class Game implements JsonSerializable
             // TODO: Player adds game deck to bottom of his own deck. Think about adding cards in correct order.
             echo '<h2>Valid Slap!</h2>';
             $this->moveWonCards($playerID);
+
+            if ($playerID === $this->playerIDOfNoCards)
+            {
+                $this->isPlayerOutOfCards = false;
+            }
+
+            $this->isFaceCardPlayed = false;
+            $this->requiredPlays = -1;
+
             // TODO: Make this more robust to handle more than 2 players
             $this->updateToWinPlayerIndex($playerID);
         }
