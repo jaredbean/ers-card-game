@@ -63,7 +63,7 @@ class Game implements JsonSerializable
     /***
      * The name of the player that won the game.
      */
-    private $gameWinnerName = null;
+    private $nameOfGameWinner = null;
 
 
     /**
@@ -118,7 +118,8 @@ class Game implements JsonSerializable
 
     // TODO: Ended up only using this for dealing cards at start of game. Refactor?
     /**
-     * A helper function that moves a card from the top of one deck to the top of another deck.
+     * A helper function used to deal the cards at the start of a game. Moves a card from the top of one deck to the
+     * top of another deck.
      * @param Deck $fromDeck : The deck from which a card will be removed.
      * @param Deck $toDeck : The deck to which the card will be received.
      * @param int $numberOfCards
@@ -141,12 +142,28 @@ class Game implements JsonSerializable
      */
     public function playCard(int $playerID)
     {
-        // TODO: Check for win condition (e.g. Player has no more cards. Check rules in Canvas.)
-        if ($playerID != $this->playerIndex)
+        // TODO: Remove game over is implemented in front-end.
+        // For testing until game over is implemented on the front-end.
+        if ($this->isGameOver)
+        {
+          return;
+        }
+
+        // If it is not the players turn, do nothing.
+        if ($this->getIndexOfPlayerID($playerID) != $this->playerIndex)
         {
             return;
         }
 
+        // If player is out of cards and the player is not the round winner, the game is over.
+        $numCards = $this->players[$this->getIndexOfPlayerID($playerID)]->getPlayerDeck()->getSize();
+        if ($numCards === 0 && !$this->isRoundWon)
+        {
+            $this->gameIsOver();
+        }
+
+        // The game is stopped at the last card of the last round, allowing for slaps. If no valid slaps happened,
+        // the winner of the previous round is given the game deck cards and a new round begins.
         if ($this->isRoundWon)
         {
             // TODO: Make work with more than 2 players
@@ -154,6 +171,7 @@ class Game implements JsonSerializable
             $this->moveWonCards($this->playerIndex);
             $this->isRoundWon = false;
             $this->isDisplayRoundWinner = false;
+            $this->nameOfRoundWinner = null;
             return;
         }
 
@@ -197,10 +215,7 @@ class Game implements JsonSerializable
      */
     public function playerSlapEvent($playerID)
     {
-        // TODO: Check logic if there is a slap on last cards of a round.
-        // TODO: Add/update logic to include displaying the winner of a successful slap.
-
-        if ($this->gameDeck->getSize() < 2)
+        if ($this->isGameOver || $this->gameDeck->getSize() < 2)
         {
             return;
         }
@@ -220,6 +235,7 @@ class Game implements JsonSerializable
             if ($playerID === $this->playerIdOfNoCards)
             {
                 $this->isPlayerOutOfCards = false;
+                $this->playerIdOfNoCards = -1;
             }
 
             $this->isFaceCardPlayed = false;
@@ -227,8 +243,9 @@ class Game implements JsonSerializable
             // If a player wins the round, but the last 2 cards were slapped, the player does not win the round.
             $this->isRoundWon = false;
             // TODO: Update this to represent both the round winner and the slap winner.
-            // This currently only displays the round winner, no the slap winner.
+            // This currently only displays the round winner, not the slap winner.
             $this->isDisplayRoundWinner = false;
+            $this->nameOfRoundWinner = null;
 
             // TODO: Make this more robust to handle more than 2 players
             $this->updateToWinPlayerIndex($playerID);
@@ -239,6 +256,7 @@ class Game implements JsonSerializable
             // For debugging
             echo '<h2>NOT Valid Slap!</h2>';
             //==================================
+
             $this->moveLostCards($playerID);
         }
     }
@@ -268,7 +286,18 @@ class Game implements JsonSerializable
         $gameDeck = $this->getGameDeck();
         $playerDeck = $this->players[$playerIndex]->getPlayerDeck();
 
-        $gameDeck->addCardsToBottom(array_reverse($playerDeck->removeCardsFromBottom(2)));
+        if ($playerDeck->getSize() === 0)
+        {
+            return;
+        }
+        else if ($playerDeck->getSize() === 1)
+        {
+            $gameDeck->addCardsToBottom(array_reverse($playerDeck->removeCardsFromBottom(1)));
+        }
+        else
+        {
+            $gameDeck->addCardsToBottom(array_reverse($playerDeck->removeCardsFromBottom(2)));
+        }
     }
 
     /**
@@ -318,15 +347,7 @@ class Game implements JsonSerializable
                 // A face card was played by previous player && curr player is still required to play more
                 if ($this->isFaceCardPlayed && $this->requiredPlays > 0)
                 {
-                      // TODO: Game win condition.
-//                    if ($this->isPlayerOutOfCards === true)
-//                    {
-//                        $this->updatePlayerIndex();
-//                    }
-//                    else
-//                    {
                         return;
-//                    }
                 }
                 // A face card was played by previous player && curr player has played the required amount
                 else if ($this->isFaceCardPlayed && $this->requiredPlays == 0)
@@ -337,19 +358,6 @@ class Game implements JsonSerializable
                     $this->nameOfRoundWinner = $this->players[$this->getPreviousPlayerIndex()]->getUsername();
                     $this->isDisplayRoundWinner = true;
                     $this->updatePlayerIndex();
-
-                    //echo '<h2>If no slaps, ' . $this->player[$this->playerIndex]->getUsername() . ' won the round!</h2>';
-//                    $this->moveWonCards($this->getPreviousPlayer());
-//                    $this->isFaceCardPlayed = false;
-//                    $this->requiredPlays = -1;
-//
-////                    $this->isPlayerOutOfCards = false;
-//
-//                    $this->updatePlayerIndex();
-
-                    // FOR DEBUGGING
-                    //$winPlayer = $this->playerIndex == 0 ? '1' : '2';
-                    //echo "<h1>Player $winPlayer wins the game deck!</h1>";
                 }
                 // A face card has not been played. Default play. This should be default case but adding the check for debugging
                 // TODO: Make this the last else when finished debugging.
@@ -391,23 +399,6 @@ class Game implements JsonSerializable
         {
             $lastPlayersDeck = $this->players[$this->playerIndex]->getPlayerDeck();
             $lastPlayersDeck->setIsClickable(False);
-
-            // TODO: Double check commented code below can be removed.
-            // Change index of players turn, wrapping from the last index.
-//            $lastIndex = sizeof($this->players) - 1;
-//            $nextPlayersIndex = ($this->playerIndex === $lastIndex) ? 0 : $this->playerIndex + 1;
-            //($this->playerIndex === $lastIndex) ? $this->playerIndex = 0 : $this->playerIndex++;
-//            $nextPlayersIndex = $this->getNextPlayerIndex();
-//            $playerNoCardsIndex = $this->getIndexOfPlayerID($this->playerIDOfNoCards);
-//
-//            if ($nextPlayersIndex === $playerNoCardsIndex)
-//            {
-//                $this->gameIsOver();
-//            }
-//            else
-//            {
-//                $this->playerIndex = $nextPlayersIndex;
-//            }
 
             $this->playerIndex = $this->getNextPlayerIndex();
 
@@ -533,7 +524,7 @@ class Game implements JsonSerializable
             $player->getPlayerDeck()->setIsClickable(false);
         }
         $this->isGameOver = true;
-        $this->gameWinnerName = $this->players[$this->playerIndex]->getUsername();
+        $this->nameOfGameWinner = $this->players[$this->getPreviousPlayerIndex()]->getUsername();
     }
 
     /***
@@ -681,7 +672,7 @@ class Game implements JsonSerializable
             'isDisplayRoundWinner' => $this->isDisplayRoundWinner,
             'nameOfRoundWinner' => $this->nameOfRoundWinner,
             'isGameOver' => $this->isGameOver,
-            'gameWinnerName' => $this->gameWinnerName
+            'gameWinnerName' => $this->nameOfGameWinner
         ];
     }
 }
