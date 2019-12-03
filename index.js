@@ -169,10 +169,21 @@
                             updateDiscardPile();
                         }
 						
+						if (game.isRoundWon == true)
+						{
+							$('#round-win-section').css('display', 'block');
+							$('.round-winner').html(game.nameOfRoundWinner + " won the round.");
+						}
+						
+						if (game.isRoundWon == false)
+						{
+							$('#round-win-section').css('display', 'none');
+						}
+						
 						if (game.isGameOver == true)
 						{
-							$('#win-section').css('display', 'block');
-							$('.winner').html(game.nameOfGameWinner + " is a winner.");
+							$('#game-win-section').css('display', 'block');
+							$('.game-winner').html(game.nameOfGameWinner + " is the winner.");
 						}
                         
                     }
