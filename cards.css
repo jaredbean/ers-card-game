@@ -376,4 +376,14 @@ html {
 	position: relative;
 }
 
-
+.msg-box {
+	position: fixed;
+	top: 0;
+	right: 0;
+	border: 2px soliblackd ;
+	border-radius: 10px;
+	padding: .5em;
+	margin: 5px;
+	background: white;
+	display: none;
+}

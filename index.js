@@ -80,17 +80,17 @@
                     action: 'playCard',
                     gameId: game.gameId,
                     playerId: currentPlayer.playerId
-                }//,
-                // function (response){
-                //     if (isJsonString(response)){
-                //         console.log(JSON.parse(response));
-                //     }
-                //     else {
-                //         $('#error-section').css('display', 'block');
-                //         // if it's a string, put it in error message section.
-                //         $('#error-section').html(response);
-                //     }
-                // }
+                },
+                function (response){
+                    if (isJsonString(response)){
+
+                    }
+                    else {
+                        $('#error-section').css('display', 'block');
+                        // if it's a string, put it in error message section.
+                        $('#error-section').html(response);
+                    }
+                }
                 );
         }
 
@@ -106,7 +106,9 @@
                 },
                 function (response){
                     if (isJsonString(response)){
-                        console.log(JSON.parse(response));
+                        if (JSON.parse(response)){
+                            // displayMessage('You won the slap.');
+                        }
                     }
                     else {
                         $('#error-section').css('display', 'block');
@@ -167,6 +169,17 @@
 
                             // Shows top five cards in the discard pile.
                             updateDiscardPile();
+
+                            $('#draw').prop('disabled', !currentPlayer.playerDeck.isClickable);
+
+                            if(game.isRoundWon){
+                                displayMessage(game.nameOfRoundWinner + ' won the round.');
+                            }
+                        }
+
+                        if (game.isGameOver) {
+                            $('#draw').prop('disabled', true);
+                            $('#slap').prop('disabled', true);
                         }
                         
                     }
@@ -266,6 +279,15 @@
         function cardEquals(card1, card2){
             return card1.suit === card2.suit &&
                     card1.value === card2.value;
+        }
+
+        function displayMessage(message){
+            $('.msg-box').html(message);
+            $('.msg-box').fadeIn();
+
+            setTimeout(function (){
+                $('.msg-box').fadeOut();
+            }, 2000);
         }
     })
 })()
