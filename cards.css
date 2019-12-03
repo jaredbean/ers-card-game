@@ -12,6 +12,11 @@ html {
 	
 }
 
+
+.turn {
+	color: white;
+}
+
 .card {
   display: inline-block;
   margin-top: 5px;
