@@ -672,7 +672,7 @@ class Game implements JsonSerializable
             'isDisplayRoundWinner' => $this->isDisplayRoundWinner,
             'nameOfRoundWinner' => $this->nameOfRoundWinner,
             'isGameOver' => $this->isGameOver,
-            'gameWinnerName' => $this->nameOfGameWinner
+            'nameOfGameWinner' => $this->nameOfGameWinner
         ];
     }
 }
