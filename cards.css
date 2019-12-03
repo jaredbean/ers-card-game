@@ -381,7 +381,7 @@ html {
 	position: relative;
 }
 
-.msg-box {
+/* .msg-box {
 	position: fixed;
 	top: 0;
 	right: 0;
@@ -391,4 +391,4 @@ html {
 	margin: 5px;
 	background: white;
 	display: none;
-}
+} */

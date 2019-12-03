@@ -172,9 +172,9 @@
 
                             $('#draw').prop('disabled', !currentPlayer.playerDeck.isClickable);
 
-                            if(game.isRoundWon){
-                                displayMessage(game.nameOfRoundWinner + ' won the round.');
-                            }
+                            // if(game.isRoundWon){
+                            //     displayMessage(game.nameOfRoundWinner + ' won the round.');
+                            // }
                         }
 
                         if (game.isGameOver) {
@@ -298,13 +298,13 @@
                     card1.value === card2.value;
         }
 
-        function displayMessage(message){
-            $('.msg-box').html(message);
-            $('.msg-box').fadeIn();
+        // function displayMessage(message){
+        //     $('.msg-box').html(message);
+        //     $('.msg-box').fadeIn();
 
-            setTimeout(function (){
-                $('.msg-box').fadeOut();
-            }, 2000);
-        }
+        //     setTimeout(function (){
+        //         $('.msg-box').fadeOut();
+        //     }, 2000);
+        // }
     })
 })()
