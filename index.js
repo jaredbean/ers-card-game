@@ -168,6 +168,13 @@
                             // Shows top five cards in the discard pile.
                             updateDiscardPile();
                         }
+						
+						if (game.isGameOver == true)
+						{
+							$('#game-section').css('display', 'none');
+							$('#win-section').css('display', 'block');
+							$('#winner').html(game.nameOfGameWinner);
+						}
                         
                     }
                     else {
