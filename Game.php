@@ -142,7 +142,7 @@ class Game implements JsonSerializable
      */
     public function playCard(int $playerID)
     {
-        // TODO: Remove game over is implemented in front-end.
+        // TODO: Remove game over is implemented in front-end. // Actually, might be good to leave this in.
         // For testing until game over is implemented on the front-end.
         if ($this->isGameOver)
         {
@@ -155,7 +155,7 @@ class Game implements JsonSerializable
             return;
         }
 
-        // If player is out of cards and the player is not the round winner, the game is over.
+        // If player is out of cards and the player has not won the round, the game is over.
         $numCards = $this->players[$this->getIndexOfPlayerID($playerID)]->getPlayerDeck()->getSize();
         if ($numCards === 0 && !$this->isRoundWon)
         {
@@ -175,35 +175,15 @@ class Game implements JsonSerializable
             return;
         }
 
-        // TODO: Edit the if check when finished updating player constructor
-//        if ($playerID === $this->playerIndex)
-//        {
+        $player = $this->players[$this->getIndexOfPlayerID($playerID)];
+        $this->moveCardsToDeck($player->getPlayerDeck(), $this->gameDeck, 1);
 
-            $player = $this->players[$this->getIndexOfPlayerID($playerID)];
-            $this->moveCardsToDeck($player->getPlayerDeck(), $this->gameDeck, 1);
+        if ($this->isFaceCardPlayed && $this->requiredPlays > 0)
+        {
+            $this->requiredPlays--;
+        }
 
-            // FOR DEBUGGING
-//            $p = $player->getPlayerId();
-//            $c = json_decode($this->showTopCards($this->gameDeck, 1));
-//            echo "<h3>Player $p played a " . $c[0]->value . "</h3>";
-//          //============================================================
-
-            if ($this->isFaceCardPlayed && $this->requiredPlays > 0)
-            {
-                $this->requiredPlays--;
-            }
-
-            // TODO: THE BUG WAS HERE FOR WIN CONDITION! WHY WASN'T THIS SURROUNDED BY CONDITION STATEMENT???
-            // Check if player is out of cards.
-//            $sizeOfPlayerDeck = $this->players[$this->getIndexOfPlayerID($playerID)]->getPlayerDeck()->getSize();
-//            $this->isPlayerOutOfCards = $sizeOfPlayerDeck < 1 ? true : false;
-//            $this->playerIDOfNoCards = $this->getIndexOfPlayerID($playerID);
-//            $this->requiredPlays = -1;
-//            $this->isFaceCardPlayed = false;
-
-            $this->updatePlayerTurn($playerID);
-
-//        }
+        $this->updatePlayerTurn($playerID);
     }
 
     /***
